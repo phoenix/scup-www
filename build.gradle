@@ -1,0 +1,131 @@
+apply plugin: 'maven'
+
+buildDir = "../public/${moduleName}"
+
+ext {
+    distBuildId = System.currentTimeMillis()
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    configurations {
+        optional
+        compile.extendsFrom optional
+    }
+    repositories {
+        mavenCentral()
+    }
+    idea {
+        module {
+            excludeDirs = []
+            [".idea", ".gradle", '.settings'].each {
+                excludeDirs << file("$it")
+            }
+        }
+    }
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: new File("../mvnrepo").toURI())
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.debug = "on"
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = "UTF-8"
+    options.charSet = "UTF-8"
+}
+
+task cleanAll << {
+    println "Clean project.."
+    delete buildDir
+}
+
+jar {
+    manifest {
+        attributes("Specification-Title": moduleName, "Specification-Version": version)
+        attributes("Implementation-Title": moduleName, "Implementation-Version": "$version-$distBuildId")
+    }
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+}
+
+// Add a temporary new optional scope
+Conf2ScopeMappingContainer scopeMappings = project.conf2ScopeMappings
+scopeMappings.addMapping(MavenPlugin.COMPILE_PRIORITY + 2, project.configurations.getByName("optional"), "optional")
+// Add a hook to replace the optional scope
+project.tasks.withType(Upload).each { applyToUploadTask(project, it) }
+
+private void applyToUploadTask(Project project, Upload upload) {
+    upload.repositories.withType(PomFilterContainer).each { applyToPom(project, it) }
+}
+
+private void applyToPom(Project project, PomFilterContainer pomContainer) {
+    pomContainer.pom.whenConfigured { MavenPom pom ->
+        pom.dependencies.findAll { it.scope == "optional" }.each {
+            it.scope = "compile"
+            it.optional = true
+        }
+    }
+}
+
+dependencies {
+
+    /* OMS */
+    compile "org.jasig.cas.client:cas-client-core:3.2.1"
+    optional "org.apache.shiro:shiro-cas:1.2.3"
+
+    /* J2EE */
+    optional "javax.servlet:javax.servlet-api:3.1.0"
+    optional "javax.servlet.jsp:jsp-api:2.2"
+
+    /* spring */
+    compile("org.springframework:spring-context-support:${springVersion}")
+    compile("org.springframework:spring-orm:${springVersion}")
+    compile("org.springframework:spring-tx:${springVersion}")
+    compile("org.springframework:spring-webmvc:${springVersion}")
+    optional("org.springframework:spring-test:${springVersion}")
+    optional("org.springframework.data:spring-data-jpa:${springDataJpaVersion}")
+
+    /* ORM */
+    compile("org.hibernate:hibernate-entitymanager:4.2.3.Final")
+    compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
+
+    /* Excel & PDF */
+    optional "org.apache.poi:poi:3.9"
+    optional "org.apache.poi:poi-ooxml:3.9"
+    optional "com.itextpdf:itextpdf:5.5.0"
+    optional "com.itextpdf:itext-asian:5.2.0"
+    optional "org.xhtmlrenderer:flying-saucer-pdf-itext5:9.0.6"
+
+    /* commons */
+    optional("org.apache.commons:commons-lang3:3.3.2")
+    optional("commons-codec:commons-codec:1.9")
+    optional "commons-collections:commons-collections:3.2.1"
+    optional("commons-beanutils:commons-beanutils:1.9.0")
+    compile "com.fasterxml.jackson.core:jackson-databind:2.3.3"
+    optional "com.google.guava:guava:17.0"
+
+    compile("org.slf4j:slf4j-api:1.7.7")
+
+    compile "org.aspectj:aspectjrt:1.8.0"
+
+    /** Others */
+    compile "org.freemarker:freemarker:2.3.20"
+}

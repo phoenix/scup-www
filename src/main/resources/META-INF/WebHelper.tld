@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+    <description><![CDATA["提供给JSP页面的一些辅助类."]]></description>
+    <display-name>web helper</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>h</short-name>
+    <uri>/web-helper</uri>
+
+    <tag>
+        <description>分页功能</description>
+        <name>paginate</name>
+        <tag-class>edu.scup.web.servlet.tags.Paginate</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>page</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>和Rails的will_paginate相似的分页功能</description>
+        <name>w_paginate</name>
+        <tag-class>edu.scup.web.servlet.tags.WillPaginate</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>page</name>
+            <rtexprvalue>true</rtexprvalue>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>js link</description>
+        <name>javascript_include_tag</name>
+        <tag-class>edu.scup.web.servlet.tags.JavascriptLinkTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>files</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>css link</description>
+        <name>stylesheet_link_tag</name>
+        <tag-class>edu.scup.web.servlet.tags.StylesheetLinkTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>files</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>link to url</description>
+        <name>link_to</name>
+        <tag-class>edu.scup.web.servlet.tags.LinkToTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>action</name>
+            <rtexprvalue>false</rtexprvalue>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>confirm</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>method</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <!-- extJs相关 -->
+    <tag>
+        <description>Ext.form.field.ComboBox</description>
+        <name>ext_combo_box</name>
+        <tag-class>edu.scup.web.servlet.tags.extjs.ComboBoxEditor</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>items</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>itemLabel</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>itemValue</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>
