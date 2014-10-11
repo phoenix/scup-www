@@ -129,4 +129,5 @@ dependencies {
 
     /** Others */
     compile "org.freemarker:freemarker:2.3.20"
+    optional("net.sf.ehcache:ehcache-core:2.6.9")
 }
