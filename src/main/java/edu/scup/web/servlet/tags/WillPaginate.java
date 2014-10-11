@@ -30,7 +30,7 @@ public class WillPaginate extends TagSupport {
 
         StringBuilder sb = new StringBuilder();
         sb.append("<div class=\"pagination\">");
-        if (page.isFirstPage())
+        if (page.isFirst())
             sb.append("<span class=\"previous_page disabled\">« 前一页</span>");
         else
             sb.append("<a class=\"prev_page\" rel=\"prev\" href=\"?page=").append(page.getNumber() - 1).append(params).append("\">« 前一页</a> ");
@@ -55,7 +55,7 @@ public class WillPaginate extends TagSupport {
         }
         appendPageLink(sb, page, page.getTotalPages(), contextPath, pathInfo, params);
 
-        if (page.isLastPage())
+        if (page.isLast())
             sb.append("<span class=\"next_page disabled\">后一页 »</span>");
         else
             sb.append("<a class=\"next_page\" rel=\"next\" href=\"?page=").append(page.getNumber() + 1).append(params).append("\">后一页 »</a>");

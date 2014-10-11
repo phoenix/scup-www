@@ -1,5 +1,7 @@
 package edu.scup.data.jpa.repository.domain;
 
+import org.springframework.data.jpa.domain.AbstractPersistable;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
@@ -15,7 +17,7 @@ import java.util.Date;
  * audit 使用OMS的登陆用户名
  */
 @MappedSuperclass
-public abstract class AbstractOmsAuditable<PK extends Serializable> extends AbstractOmsPersistable<PK>
+public abstract class AbstractOmsAuditable<PK extends Serializable> extends AbstractPersistable<PK>
         implements OmsAuditable<PK> {
 
     private static final long serialVersionUID = -2363991186256484787L;

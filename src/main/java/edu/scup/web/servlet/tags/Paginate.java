@@ -38,13 +38,13 @@ public class Paginate extends TagSupport {
                     .append("/images/first.gif\" width=\"40\" height=\"15\" onclick=\"javascript:jumpPage(0)\" style=\"cursor:hand\"/></div></td>");
         }
 
-        if (page.hasPreviousPage()) {
+        if (page.hasPrevious()) {
             sb.append("<td width=\"42\"><div align=\"center\"><img src=\"").append(contextPath).append("/images/pre.gif\" width=\"45\" height=\"15\" onclick=\"javascript:jumpPage(")
                     .append(page.getNumber() - 1).append(")\" style=\"cursor:hand\" /></div></td>");
         } else {
             sb.append("<td width=\"42\"><div align=\"center\"><img src=\"").append(contextPath).append("/images/pre_dis.gif\" width=\"45\" height=\"15\"  /></div></td>");
         }
-        if (page.hasNextPage()) {
+        if (page.hasNext()) {
             sb.append("<td width=\"42\"><div align=\"center\"><img src=\"").append(contextPath).append("/images/next.gif\" width=\"45\" height=\"15\" onclick=\"javascript:jumpPage(")
                     .append(page.getNumber() + 1).append(")\" style=\"cursor:hand\"/></div></td>");
         } else {
