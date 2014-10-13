@@ -117,6 +117,7 @@ dependencies {
 
     /* commons */
     optional("org.apache.commons:commons-lang3:3.3.2")
+    optional("org.apache.commons:commons-pool2:2.2")
     optional("commons-codec:commons-codec:1.9")
     optional "commons-collections:commons-collections:3.2.1"
     optional("commons-beanutils:commons-beanutils:1.9.0")
@@ -132,4 +133,6 @@ dependencies {
     /** Others */
     compile "org.freemarker:freemarker:2.3.20"
     optional("net.sf.ehcache:ehcache-core:2.6.9")
+    optional("redis.clients:jedis:2.6.0")
+    optional("com.alibaba:fastjson:1.1.42")
 }
