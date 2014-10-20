@@ -5,7 +5,7 @@ import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.ejb.criteria.path.SingularAttributePath;
+import org.hibernate.jpa.criteria.path.SingularAttributePath;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;

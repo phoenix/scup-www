@@ -105,7 +105,7 @@ dependencies {
     optional("org.springframework.data:spring-data-jpa:${springDataJpaVersion}")
 
     /* ORM */
-    compile("org.hibernate:hibernate-entitymanager:4.2.3.Final")
+    compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
     compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
 
     /* Excel & PDF */
