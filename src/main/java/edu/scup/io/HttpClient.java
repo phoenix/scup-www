@@ -15,6 +15,8 @@ import java.util.Map;
 public class HttpClient {
     private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.13 Safari/537.36";
+    public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
+    public static boolean useProxy;
     private static final int socketReadTimeout = 30000;
 
     public static String getResponse(String url) throws IOException {
@@ -111,7 +113,7 @@ public class HttpClient {
     }
 
     public static HttpURLConnection openConnection(String url) throws URISyntaxException, IOException {
-        URLConnection conn = new URI(url).toURL().openConnection();
+        URLConnection conn = useProxy ? new URI(url).toURL().openConnection(proxy) : new URI(url).toURL().openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setReadTimeout(socketReadTimeout);
         return (HttpURLConnection) conn;
