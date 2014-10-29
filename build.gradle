@@ -122,7 +122,6 @@ dependencies {
     optional "commons-collections:commons-collections:3.2.1"
     optional("commons-beanutils:commons-beanutils:1.9.0")
     optional "commons-io:commons-io:2.4"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.3.3"
     optional "com.google.guava:guava:18.0"
 
     compile("org.slf4j:slf4j-api:1.7.7")
@@ -134,5 +133,5 @@ dependencies {
     compile "org.freemarker:freemarker:2.3.20"
     optional("net.sf.ehcache:ehcache-core:2.6.9")
     optional("redis.clients:jedis:2.6.0")
-    optional("com.alibaba:fastjson:1.1.42")
+    optional("com.alibaba:fastjson:1.2.0")
 }
