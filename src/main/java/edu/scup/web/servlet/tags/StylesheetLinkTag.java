@@ -17,6 +17,10 @@ public class StylesheetLinkTag extends TagSupport {
         for (String file : files.split(",")) {
             String filePath = (file.startsWith("/") ? "" : "/stylesheets/") + file + ".css";
             String lastModified = String.valueOf(new File(appRoot + filePath).lastModified() / 1000);
+            if ("0".equals(lastModified) && !file.startsWith("/")) {
+                filePath = "/assets/vendor/" + file + ".css";
+                lastModified = String.valueOf(new File(appRoot + filePath).lastModified() / 1000);
+            }
             sb.append("<link href=\"").append(pageContext.getServletContext().getContextPath()).append(filePath)
                     .append("?").append(lastModified).append("\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />\n");
         }

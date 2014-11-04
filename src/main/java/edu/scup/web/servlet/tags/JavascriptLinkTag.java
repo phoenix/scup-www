@@ -17,6 +17,10 @@ public class JavascriptLinkTag extends TagSupport {
         for (String file : files.split(",")) {
             String filePath = (file.startsWith("/") ? "" : "/javascripts/") + file + ".js";
             String lastModified = String.valueOf(new File(appRoot + filePath).lastModified() / 1000);
+            if ("0".equals(lastModified) && !file.startsWith("/")) {
+                filePath = "/assets/vendor/" + file + ".js";
+                lastModified = String.valueOf(new File(appRoot + filePath).lastModified() / 1000);
+            }
             sb.append("<script src=\"").append(pageContext.getServletContext().getContextPath()).append(filePath)
                     .append("?").append(lastModified).append("\" type=\"text/javascript\"></script>\n");
         }
