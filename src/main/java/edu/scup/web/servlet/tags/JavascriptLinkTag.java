@@ -15,6 +15,7 @@ public class JavascriptLinkTag extends TagSupport {
     public int doEndTag() throws JspException {
         StringBuilder sb = new StringBuilder();
         for (String file : files.split(",")) {
+            file = file.trim();
             String filePath = (file.startsWith("/") ? "" : "/javascripts/") + file + ".js";
             String lastModified = String.valueOf(new File(appRoot + filePath).lastModified() / 1000);
             if ("0".equals(lastModified) && !file.startsWith("/")) {
