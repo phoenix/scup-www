@@ -15,8 +15,8 @@
         <body-content>empty</body-content>
         <attribute>
             <name>page</name>
-            <rtexprvalue>true</rtexprvalue>
             <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
@@ -27,8 +27,15 @@
         <body-content>empty</body-content>
         <attribute>
             <name>page</name>
-            <rtexprvalue>true</rtexprvalue>
             <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                使用哪种风格的分页,默认为apple_pagination,可选:digg_pagination/flickr_pagination
+            </description>
+            <name>css</name>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
 
@@ -61,8 +68,8 @@
         <body-content>scriptless</body-content>
         <attribute>
             <name>action</name>
-            <rtexprvalue>false</rtexprvalue>
             <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>confirm</name>

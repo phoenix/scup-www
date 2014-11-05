@@ -13,6 +13,7 @@ import java.util.Map;
 public class WillPaginate extends TagSupport {
     private static final long serialVersionUID = 8628384333451451696L;
     private Page page;
+    private String css = "apple_pagination";
 
     @Override
     public int doEndTag() throws JspException {
@@ -29,11 +30,11 @@ public class WillPaginate extends TagSupport {
         String params = paramsSb.toString();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<div class=\"pagination\">");
+        sb.append("<div class=\"").append(css).append("\">");
         if (page.isFirst())
-            sb.append("<span class=\"previous_page disabled\">« 前一页</span>");
+            sb.append("<span class=\"previous_page disabled\">← 前一页</span>");
         else
-            sb.append("<a class=\"prev_page\" rel=\"prev\" href=\"?page=").append(page.getNumber() - 1).append(params).append("\">« 前一页</a> ");
+            sb.append("<a class=\"prev_page\" rel=\"prev\" href=\"?page=").append(page.getNumber() - 1).append(params).append("\">← 前一页</a> ");
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) {
@@ -56,9 +57,9 @@ public class WillPaginate extends TagSupport {
         appendPageLink(sb, page, page.getTotalPages(), contextPath, pathInfo, params);
 
         if (page.isLast())
-            sb.append("<span class=\"next_page disabled\">后一页 »</span>");
+            sb.append("<span class=\"next_page disabled\">后一页 →</span>");
         else
-            sb.append("<a class=\"next_page\" rel=\"next\" href=\"?page=").append(page.getNumber() + 1).append(params).append("\">后一页 »</a>");
+            sb.append("<a class=\"next_page\" rel=\"next\" href=\"?page=").append(page.getNumber() + 1).append(params).append("\">后一页 →</a>");
 
         sb.append("(共 ").append(page.getTotalElements()).append(" 条记录)");
         sb.append("</div>");
@@ -72,7 +73,7 @@ public class WillPaginate extends TagSupport {
 
     private StringBuilder appendPageLink(StringBuilder sb, Page page, int currentDisplayPage, String contextPath, String pathInfo, String params) {
         if (page.getNumber() + 1 == currentDisplayPage)
-            sb.append("<em>").append(currentDisplayPage).append("</em> \n");
+            sb.append("<em class=\"current\">").append(currentDisplayPage).append("</em> \n");
         else
             sb.append("<a href=\"").append(contextPath).append(pathInfo).append("?page=").append(currentDisplayPage - 1).append(params).append("\">").append(currentDisplayPage).append("</a> \n");
         return sb;
@@ -80,5 +81,9 @@ public class WillPaginate extends TagSupport {
 
     public void setPage(Page page) {
         this.page = page;
+    }
+
+    public void setCss(String css) {
+        this.css = css;
     }
 }
