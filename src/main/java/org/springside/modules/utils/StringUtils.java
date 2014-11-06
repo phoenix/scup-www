@@ -14,7 +14,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return isBlank(str) ? 0 : Long.parseLong(str.trim());
         }
         if (Boolean.class.isAssignableFrom(clz)) {
-            return isBlank(str) ? 0 : Boolean.parseBoolean(str.trim());
+            if ("0".equals(str)) {
+                return Boolean.FALSE;
+            }
+            if ("1".equals(str)) {
+                return Boolean.TRUE;
+            }
+            return isBlank(str) ? null : Boolean.parseBoolean(str.trim());
         }
         if (Date.class.isAssignableFrom(clz)) {
             try {

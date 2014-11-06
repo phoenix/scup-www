@@ -55,8 +55,8 @@ public class DynamicSpecifications {
 
                         Object value = filter.value;
 
-                        if (value instanceof String) {
-                            Class clz = expression.getJavaType();
+                        Class clz = expression.getJavaType();
+                        if (!clz.equals(value.getClass())) {
                             if (clz.equals(Serializable.class) && Persistable.class.isAssignableFrom(entityClazz)
                                     && "id".equals(((SingularAttributePath) expression).getAttribute().getName())) {//处理PK
                                 Type type = entityClazz.getGenericSuperclass();
@@ -67,7 +67,7 @@ public class DynamicSpecifications {
                                     }
                                 }
                             }
-                            value = StringUtils.stringToObject((String) value, clz);
+                            value = StringUtils.stringToObject(String.valueOf(value), clz);
                         }
 
                         // logic operator
