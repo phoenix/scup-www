@@ -4,7 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springside.modules.web.Servlets;
 
 import javax.servlet.ServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -63,6 +65,10 @@ public class SearchFilter {
         return parse(searchParams);
     }
 
+    public static List<SearchFilter> getFiltersFromServletRequest(ServletRequest request) {
+        return new ArrayList<>(parseFromServletRequest(request).values());
+    }
+
     public static Map<String, SearchFilter> parseFromMap(Map<String, Object> query) {
         Map<String, Object> searchParams = new HashMap<>();
         for (String key : query.keySet()) {
@@ -72,5 +78,9 @@ public class SearchFilter {
             }
         }
         return parse(searchParams);
+    }
+
+    public static List<SearchFilter> getFiltersFromMap(Map<String, Object> query) {
+        return new ArrayList<>(parseFromMap(query).values());
     }
 }
