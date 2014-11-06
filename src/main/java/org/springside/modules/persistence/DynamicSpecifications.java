@@ -46,8 +46,9 @@ public class DynamicSpecifications {
                         // nested path translate, 如Task的名为"user.name"的filedName, 转换为Task.user.name属性
                         String[] names = StringUtils.split(filter.fieldName, ".");
                         Path expression = root.get(names[0]);
-                        if (Collection.class.isAssignableFrom(expression.getJavaType())) {
-                            expression = root.join(names[0]);//先只支持一级的collection
+                        if (Collection.class.isAssignableFrom(expression.getJavaType())) {//修复一对多不能查询的bug
+                            //先只支持一级的collection,Spring-Data-JPA默认使用leftJoin,这里也需要用LEFT，否则在增加一个Order的时候，spring-data-jpa会再去创建一个leftJoin
+                            expression = root.join(names[0], JoinType.LEFT);
                         }
                         for (int i = 1; i < names.length; i++) {
                             expression = expression.get(names[i]);
@@ -56,7 +57,7 @@ public class DynamicSpecifications {
                         Object value = filter.value;
 
                         Class clz = expression.getJavaType();
-                        if (!clz.equals(value.getClass())) {
+                        if (!clz.equals(value.getClass()) && !Collection.class.isAssignableFrom(value.getClass())) {
                             if (clz.equals(Serializable.class) && Persistable.class.isAssignableFrom(entityClazz)
                                     && "id".equals(((SingularAttributePath) expression).getAttribute().getName())) {//处理PK
                                 Type type = entityClazz.getGenericSuperclass();
