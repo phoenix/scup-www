@@ -8,11 +8,14 @@ import java.io.IOException;
 
 public class JavascriptLinkTag extends TagSupport {
     private static final long serialVersionUID = -6514243096501357267L;
-    static final String appRoot = new File(JavascriptLinkTag.class.getResource("/").getFile()).getParentFile().getParent();
+    private static String appRoot;
     private String files;
 
     @Override
     public int doEndTag() throws JspException {
+        if (appRoot == null) {
+            appRoot = pageContext.getServletContext().getRealPath("/");
+        }
         StringBuilder sb = new StringBuilder();
         for (String file : files.split(",")) {
             file = file.trim();
