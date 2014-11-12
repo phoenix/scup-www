@@ -1,6 +1,11 @@
 package edu.scup.data.jpa.repository.support;
 
 import com.google.common.collect.Lists;
+import edu.scup.data.jpa.repository.JpaRepositoryExt;
+import edu.scup.data.jpa.repository.domain.LogicalDeletable;
+import edu.scup.data.jpa.repository.domain.OmsAuditable;
+import edu.scup.util.ReflectionUtils;
+import edu.scup.web.util.OmsCurrentUser;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -22,11 +27,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
-import edu.scup.data.jpa.repository.JpaRepositoryExt;
-import edu.scup.data.jpa.repository.domain.LogicalDeletable;
-import edu.scup.data.jpa.repository.domain.OmsAuditable;
-import edu.scup.util.ReflectionUtils;
-import edu.scup.web.util.OmsCurrentUser;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

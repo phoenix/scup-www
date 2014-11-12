@@ -9,18 +9,6 @@
     <uri>/web-helper</uri>
 
     <tag>
-        <description>分页功能</description>
-        <name>paginate</name>
-        <tag-class>edu.scup.web.servlet.tags.Paginate</tag-class>
-        <body-content>empty</body-content>
-        <attribute>
-            <name>page</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
         <description>和Rails的will_paginate相似的分页功能</description>
         <name>w_paginate</name>
         <tag-class>edu.scup.web.servlet.tags.WillPaginate</tag-class>
