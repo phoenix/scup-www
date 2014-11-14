@@ -69,13 +69,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
         tagWriter.appendValue(columnTitle);
         tagWriter.endTag();
         if (StringUtils.isNotBlank(dictionary)) {
-            if (dictionaryUri != null) {
-                //增加remote字典
-                StringBuilder dict = getSnippets(FUNC_FORMATTER_PREFIX + dictionaryUri);
-                if (dict.length() < 10) {
-                    dict.append("var _r_dict_").append(dictionary).append("=[];");
-                }
-            }
+            StringBuilder js = getSnippets(KEY_JS);
             //增加formatter函数
             StringBuilder formatter = getSnippets(FUNC_FORMATTER_PREFIX + dictionary);
             //定义字典
@@ -108,14 +102,25 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
                 }
                 setFormatter(formatter, kv);
             }
-            StringBuilder js = getSnippets(KEY_JS);
             //定义字典
             if (defineData) {
                 defineComboboxData(dictionary, dataDefine, kv);
                 js.append(dataDefine).append("\r\n");
             }
             formatter.append("\t").append("}");
-            js.append(formatter).append("\r\n");
+            js.append(formatter).append("\n");
+            if (dictionaryUri != null) {
+                //增加remote字典
+                StringBuilder dict = getSnippets(FUNC_FORMATTER_PREFIX + dictionaryUri);
+                if (dict.length() < 10) {
+                    dict.append("var _r_dict_").append(dictionary).append("=[];\n");
+                    dict.append("$.post('").append(dictionaryUri).append("',function(data){\n")
+                            .append("\t_.forEach(data,function(v,k){")
+                            .append(DATA_DEFINE_PREFIX).append(dictionary).append(".push({'display':k,'value':v})})\n")
+                            .append("})\n");
+                    js.append(dict).append("\n");
+                }
+            }
         }
         return EVAL_PAGE;
     }
