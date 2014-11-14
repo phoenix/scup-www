@@ -125,6 +125,15 @@ public class JedisUtil {
     }
 
     /**
+     * @see redis.clients.jedis.Jedis#llen(String)
+     */
+    public Long llen(final String key) {
+        try (Jedis jedis = jedisPool.getReadableResource()) {
+            return jedis.llen(key);
+        }
+    }
+
+    /**
      * @see redis.clients.jedis.Jedis#rpush(byte[], byte[]...)
      */
     public void rpush(final String key, List<byte[]> bytes) {
@@ -141,6 +150,24 @@ public class JedisUtil {
     public void rpush(final String key, String... string) {
         try (Jedis jedis = jedisPool.getMasterResource()) {
             jedis.rpush(key, string);
+        }
+    }
+
+    /**
+     * @see redis.clients.jedis.Jedis#lpop(String)
+     */
+    public String lpop(final String key) {
+        try (Jedis jedis = jedisPool.getMasterResource()) {
+            return jedis.lpop(key);
+        }
+    }
+
+    /**
+     * @see redis.clients.jedis.Jedis#blpop(String)
+     */
+    public List<String> blpop(String arg) {
+        try (Jedis jedis = jedisPool.getMasterResource()) {
+            return jedis.blpop(arg);
         }
     }
 
