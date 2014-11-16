@@ -33,6 +33,8 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
     private String checkbox;
     private String editor;
     private String formatter;
+    private boolean sortable;
+    private String order;
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
@@ -55,6 +57,8 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
         tagWriter.writeAttribute("field", field);
         tagWriter.writeOptionalAttributeValue("checkbox", checkbox);
         tagWriter.writeOptionalAttributeValue("formatter", formatter);
+        tagWriter.writeOptionalAttributeValue("sortable", String.valueOf(sortable));
+        tagWriter.writeOptionalAttributeValue("order", order);
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
             tagWriter.writeAttribute("editor", "{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
@@ -171,5 +175,13 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
 
     public void setFormatter(String formatter) {
         this.formatter = formatter;
+    }
+
+    public void setSortable(boolean sortable) {
+        this.sortable = sortable;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
     }
 }

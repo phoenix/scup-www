@@ -35,6 +35,7 @@ public abstract class AbstractHtmlElementTag extends RequestContextAwareTag {
         tagWriter.writeOptionalAttributeValue("title", title);
         tagWriter.writeOptionalAttributeValue("id", id);
         tagWriter.writeOptionalAttributeValue("width", width);
+        tagWriter.writeOptionalAttributeValue("class", cssClass);
     }
 
     protected TagWriter createTagWriter() {

@@ -34,6 +34,8 @@ public class EDataGridTag extends AbstractHtmlElementTag {
     private String fitColumns;
     private String singleSelect;
     private String idField = "id";
+    private String sortName;
+    private String sortOrder;
     private List<DataGridColumn> columns = new ArrayList<>();
 
     @Override
@@ -61,6 +63,8 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         tagWriter.writeOptionalAttributeValue("singleSelect", singleSelect);
         tagWriter.writeAttribute("toolbar", getToolbar());
         tagWriter.writeAttribute("idField", idField);
+        tagWriter.writeOptionalAttributeValue("sortName", sortName);
+        tagWriter.writeOptionalAttributeValue("sortOrder", sortOrder);
 
         tagWriter.forceBlock();
 
@@ -149,6 +153,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         js.append("function _searchReset").append(id).append("(){ $('").append(getToolbar()).append("').find(\":input\").val(\"\");_").append(id).append("search();}\n");
         js.append("$(function () {\n");
         js.append("$.extend($.fn.pagination.defaults,{beforePageText:'',afterPageText:'/{pages}',displayMsg:'{from}-{to}共{total}条',showPageList:true,showRefresh:true});\n");
+        //begin edatagrid
         js.append("$('#").append(id).append("').edatagrid({\r\n\tsaveUrl: '").append(saveUrl)
                 .append("',\r\n\tupdateUrl: '").append(updateUrl).append("',\r\n\tdestroyUrl:'").append(destroyUrl).append("'\n});");
 
@@ -214,5 +219,13 @@ public class EDataGridTag extends AbstractHtmlElementTag {
 
     public void setIdField(String idField) {
         this.idField = idField;
+    }
+
+    public void setSortName(String sortName) {
+        this.sortName = sortName;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

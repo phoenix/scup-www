@@ -408,6 +408,16 @@
                 horizontal scrolling.
             </description>
         </attribute>
+        <attribute>
+            <name>sortName</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>定义的列进行排序</description>
+        </attribute>
+        <attribute>
+            <name>sortOrder</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>定义列的排序顺序，只能是"递增 asc"或"降序desc"</description>
+        </attribute>
     </tag>
 
     <tag>
@@ -458,6 +468,16 @@
             <name>formatter</name>
             <rtexprvalue>true</rtexprvalue>
             <description>格式化函数名称</description>
+        </attribute>
+        <attribute>
+            <name>sortable</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>是否排序</description>
+        </attribute>
+        <attribute>
+            <name>order</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>默认排序</description>
         </attribute>
     </tag>
 </taglib>
