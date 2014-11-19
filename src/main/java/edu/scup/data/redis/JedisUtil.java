@@ -163,11 +163,11 @@ public class JedisUtil {
     }
 
     /**
-     * @see redis.clients.jedis.Jedis#blpop(String)
+     * @see redis.clients.jedis.Jedis#blpop(int, String)
      */
-    public List<String> blpop(String arg) {
+    public List<String> blpop(final int timeout, final String... keys) {
         try (Jedis jedis = jedisPool.getMasterResource()) {
-            return jedis.blpop(arg);
+            return jedis.blpop(timeout, keys);
         }
     }
 
