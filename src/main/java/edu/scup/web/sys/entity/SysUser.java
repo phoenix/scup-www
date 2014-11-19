@@ -1,5 +1,9 @@
 package edu.scup.web.sys.entity;
 
-public interface SysUser {
-    String getUserName();
+import java.io.Serializable;
+import java.security.Principal;
+
+public interface SysUser<PK extends Serializable> extends Principal {
+
+    public PK getId();
 }

@@ -1098,10 +1098,11 @@ public class DataGridTag extends RequestContextAwareTag {
         sb.append("});");
     }
 
+    @SuppressWarnings("unchecked")
     public String getNoAuthOperButton() {
         List<String> nolist = (List<String>) super.pageContext.getRequest().getAttribute("noauto_operationCodes");
         StringBuffer sb = new StringBuffer();
-        if (ContextHolderUtils.getCurrentUser().getUserName().equals("admin") || !Globals.BUTTON_AUTHORITY_CHECK) {
+        if (ContextHolderUtils.getCurrentUser().getName().equals("admin") || !Globals.BUTTON_AUTHORITY_CHECK) {
         } else {
             if (nolist != null && nolist.size() > 0) {
                 for (String s : nolist) {
@@ -1120,11 +1121,10 @@ public class DataGridTag extends RequestContextAwareTag {
      * dateGridUrl：url
      * operationCode：操作码
      * optList： 操作列表
-     *
-     * @version 1.0
      */
+    @SuppressWarnings("unchecked")
     private void installOperationCode(DataGridUrl dataGridUrl, String operationCode, List optList) {
-        if (ContextHolderUtils.getCurrentUser().getUserName().equals("admin") || !Globals.BUTTON_AUTHORITY_CHECK) {
+        if (ContextHolderUtils.getCurrentUser().getName().equals("admin") || !Globals.BUTTON_AUTHORITY_CHECK) {
             optList.add(dataGridUrl);
         } else if (!StringUtils.isEmpty(operationCode) && !"null".equalsIgnoreCase(operationCode)) {
             Set<String> operationCodes = (Set<String>) super.pageContext.getRequest().getAttribute("operationCodes");
