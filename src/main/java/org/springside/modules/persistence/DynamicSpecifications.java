@@ -57,7 +57,7 @@ public class DynamicSpecifications {
                         Object value = filter.value;
 
                         Class clz = expression.getJavaType();
-                        if (!clz.equals(value.getClass()) && !Collection.class.isAssignableFrom(value.getClass())) {
+                        if (!clz.isPrimitive() && !clz.equals(value.getClass()) && !Collection.class.isAssignableFrom(value.getClass())) {
                             if (clz.equals(Serializable.class) && Persistable.class.isAssignableFrom(entityClazz)
                                     && "id".equals(((SingularAttributePath) expression).getAttribute().getName())) {//处理PK
                                 Type type = entityClazz.getGenericSuperclass();
