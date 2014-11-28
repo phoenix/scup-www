@@ -1,9 +1,11 @@
 package edu.scup.web.servlet.tags.easyui;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import edu.scup.web.servlet.tags.easyui.vo.DataGridColumn;
 import edu.scup.web.sys.dao.CommonDao;
-import edu.scup.web.sys.entity.SType;
-import edu.scup.web.sys.entity.STypeGroup;
+import edu.scup.web.sys.entity.SDict;
+import edu.scup.web.sys.entity.SDictGroup;
 import edu.scup.web.sys.service.SystemService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import javax.servlet.jsp.JspException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EDataGridTag extends AbstractHtmlElementTag {
     private TagWriter tagWriter;
@@ -36,7 +39,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
     private String idField = "id";
     private String sortName;
     private String sortOrder;
-    private List<DataGridColumn> columns = new ArrayList<>();
+    private List<EDataGridColumnTag> columns = new ArrayList<>();
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
@@ -88,12 +91,12 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         tagWriter.startTag("div");
         tagWriter.writeAttribute("id", getToolbar().replace("#", ""));
         tagWriter.forceBlock();
-        List<DataGridColumn> queryColumns = findQueryableColumns();
+        List<EDataGridColumnTag> queryColumns = findQueryableColumns();
         if (!queryColumns.isEmpty()) {
             tagWriter.startTag("div");
             tagWriter.writeAttribute("id", "searchColumns");
         }
-        for (DataGridColumn column : queryColumns) {
+        for (EDataGridColumnTag column : queryColumns) {
             tagWriter.startTag("div");
             tagWriter.writeAttribute("style", "display: inline-block;padding: 10px;");
             tagWriter.forceBlock();
@@ -108,13 +111,13 @@ public class EDataGridTag extends AbstractHtmlElementTag {
                 tagWriter.writeAttribute("value", "");
                 tagWriter.appendValue("---请选择---");
                 tagWriter.endTag();
-                List<SType> typeList = STypeGroup.allTypes.get(dictionary);
+                List<SDict> typeList = SDictGroup.allTypes.get(dictionary);
 
                 if (typeList != null && !typeList.isEmpty()) {
-                    for (SType type : typeList) {
+                    for (SDict type : typeList) {
                         tagWriter.startTag("option");
-                        tagWriter.writeAttribute("value", type.getTypeCode());
-                        tagWriter.appendValue(type.getTypeName());
+                        tagWriter.writeAttribute("value", type.getDictCode());
+                        tagWriter.appendValue(type.getDictName());
                         tagWriter.endTag();
                     }
                 }
@@ -155,7 +158,37 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         js.append("$.extend($.fn.pagination.defaults,{beforePageText:'',afterPageText:'/{pages}',displayMsg:'{from}-{to}共{total}条',showPageList:true,showRefresh:true});\n");
         //begin edatagrid
         js.append("$('#").append(id).append("').edatagrid({\r\n\tsaveUrl: '").append(saveUrl)
-                .append("',\r\n\tupdateUrl: '").append(updateUrl).append("',\r\n\tdestroyUrl:'").append(destroyUrl).append("'\n});");
+                .append("',\r\n\tupdateUrl: '").append(updateUrl).append("',\r\n\tdestroyUrl:'").append(destroyUrl).append("',\n")
+                .append("\tcolumns: [[\n");
+        List<String> columnsString = new ArrayList<>();
+        for (EDataGridColumnTag column : this.columns) {
+            Map<String, Object> json = new HashMap<>();
+            json.put("field", column.getField());
+            json.put("title", column.getColumnTitle());
+            json.put("sortable", column.isSortable());
+            json.put("width", column.getWidth());
+            json.put("style", column.getCssStyle());
+            json.put("id", column.getId());
+            json.put("class", column.getCssClass());
+            json.put("checkbox", column.getCheckbox());
+            json.put("order", column.getOrder());
+            String editor = column.getEditor();
+            if (editor != null) {
+                if (editor.startsWith("{") && editor.endsWith("}")) {
+                    json.put("editor", JSON.parse(editor));
+                } else {
+                    json.put("editor", editor);
+                }
+            }
+            String rt = JSON.toJSONString(json);
+            if(column.getFormatter() != null){
+                rt = rt.substring(0,rt.length()-1)+",formatter:"+column.getFormatter()+"}";
+            }
+            columnsString.add(rt);
+        }
+        js.append(StringUtils.join(columnsString, ",\n"));
+        js.append("\n]]\n")
+                .append("});");
 
         js.append("\n});");
         tagWriter.appendValue("\r\n");
@@ -163,9 +196,9 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         tagWriter.endTag();
     }
 
-    private List<DataGridColumn> findQueryableColumns() {
-        List<DataGridColumn> rt = new ArrayList<>();
-        for (DataGridColumn column : columns) {
+    private List<EDataGridColumnTag> findQueryableColumns() {
+        List<EDataGridColumnTag> rt = new ArrayList<>();
+        for (EDataGridColumnTag column : columns) {
             if (column.isQuery()) {
                 rt.add(column);
             }
@@ -213,7 +246,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         this.destroyUrl = destroyUrl;
     }
 
-    public void addColumn(DataGridColumn column) {
+    public void addColumn(EDataGridColumnTag column) {
         this.columns.add(column);
     }
 

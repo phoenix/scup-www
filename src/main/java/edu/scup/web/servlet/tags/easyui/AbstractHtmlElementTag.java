@@ -73,6 +73,14 @@ public abstract class AbstractHtmlElementTag extends RequestContextAwareTag {
         this.cssClass = cssClass;
     }
 
+    public String getCssClass() {
+        return cssClass;
+    }
+
+    public String getCssStyle() {
+        return cssStyle;
+    }
+
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
@@ -81,7 +89,15 @@ public abstract class AbstractHtmlElementTag extends RequestContextAwareTag {
         this.title = title;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setWidth(String width) {
         this.width = width;
+    }
+
+    public String getWidth() {
+        return width;
     }
 }

@@ -426,6 +426,7 @@
         <description>列表字段</description>
         <attribute>
             <name>columnTitle</name>
+            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
             <description>字段标题</description>
         </attribute>
@@ -478,6 +479,16 @@
             <name>order</name>
             <rtexprvalue>true</rtexprvalue>
             <description>默认排序</description>
+        </attribute>
+        <attribute>
+            <name>image</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>是否为图片字段</description>
+        </attribute>
+        <attribute>
+            <name>imageSize</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>自定义大小显示(格式：width,height)</description>
         </attribute>
     </tag>
 </taglib>

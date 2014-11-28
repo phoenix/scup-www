@@ -1,9 +1,9 @@
 package edu.scup.web.sys.service;
 
-import edu.scup.web.sys.dao.STypeDao;
-import edu.scup.web.sys.dao.STypeGroupDao;
-import edu.scup.web.sys.entity.SType;
-import edu.scup.web.sys.entity.STypeGroup;
+import edu.scup.web.sys.dao.SDictDao;
+import edu.scup.web.sys.dao.SDictGroupDao;
+import edu.scup.web.sys.entity.SDict;
+import edu.scup.web.sys.entity.SDictGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,16 +14,16 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class SystemService {
     @Autowired
-    private STypeGroupDao typeGroupDao;
+    private SDictGroupDao typeGroupDao;
     @Autowired
-    private STypeDao typeDao;
+    private SDictDao typeDao;
 
     public void initAllTypeGroups() {
-        List<STypeGroup> typeGroups = typeGroupDao.findAll();
-        for (STypeGroup sTypeGroup : typeGroups) {
-            STypeGroup.allTypeGroups.put(sTypeGroup.getTypeGroupCode().toLowerCase(), sTypeGroup);
-            List<SType> types = typeDao.findBySTypeGroupId(sTypeGroup.getId());
-            STypeGroup.allTypes.put(sTypeGroup.getTypeGroupCode().toLowerCase(), types);
+        List<SDictGroup> typeGroups = typeGroupDao.findAll();
+        for (SDictGroup sTypeGroup : typeGroups) {
+            SDictGroup.allDictGroups.put(sTypeGroup.getDictGroupCode().toLowerCase(), sTypeGroup);
+            List<SDict> types = typeDao.findByDictGroupId(sTypeGroup.getId());
+            SDictGroup.allTypes.put(sTypeGroup.getDictGroupCode().toLowerCase(), types);
         }
     }
 }

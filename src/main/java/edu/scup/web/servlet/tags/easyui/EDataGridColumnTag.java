@@ -1,10 +1,9 @@
 package edu.scup.web.servlet.tags.easyui;
 
 import com.alibaba.fastjson.JSON;
-import edu.scup.web.servlet.tags.easyui.vo.DataGridColumn;
 import edu.scup.web.sys.dao.CommonDao;
-import edu.scup.web.sys.entity.SType;
-import edu.scup.web.sys.entity.STypeGroup;
+import edu.scup.web.sys.entity.SDict;
+import edu.scup.web.sys.entity.SDictGroup;
 import edu.scup.web.sys.service.SystemService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EDataGridColumnTag extends AbstractHtmlElementTag {
+public class EDataGridColumnTag extends AbstractHtmlElementTag implements Cloneable {
     private TagWriter tagWriter;
     @Autowired
     private SystemService systemService;
@@ -35,6 +34,8 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
     private String formatter;
     private boolean sortable;
     private String order;
+    private boolean isImage;
+    private String imageSize;
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
@@ -45,32 +46,28 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
             acbf.autowireBean(this);
         }
 
-        DataGridColumn column = new DataGridColumn();
-        column.setQuery(query);
-        column.setField(field);
-        column.setDictionary(dictionary);
-        column.setTitle(columnTitle);
-        getEDataGridTag().addColumn(column);
-
         tagWriter.startTag("th");
-        writeOptionalAttributes(tagWriter);
-        tagWriter.writeAttribute("field", field);
-        tagWriter.writeOptionalAttributeValue("checkbox", checkbox);
-        tagWriter.writeOptionalAttributeValue("formatter", formatter);
-        tagWriter.writeOptionalAttributeValue("sortable", String.valueOf(sortable));
-        tagWriter.writeOptionalAttributeValue("order", order);
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
-            tagWriter.writeAttribute("editor", "{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
-                    + ",valueField: 'value',textField: 'display',required:true}}");
-        } else {
-            tagWriter.writeOptionalAttributeValue("editor", editor);
+            editor = "{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
+                    + ",valueField: 'value',textField: 'display',required:true}}";
         }
+        tagWriter.writeOptionalAttributeValue("editor", editor);
 
         if (StringUtils.isNotBlank(dictionary) && StringUtils.isBlank(formatter)) {
-            tagWriter.writeAttribute("formatter", "format_" + dictionary);
+            formatter = "format_" + dictionary;
+        } else if (isImage) {
+            String style = "";
+            if (StringUtils.isNotBlank(imageSize)) {
+                String[] size = imageSize.split(",");
+                style += "width=" + size[0] + " ";
+                if (size.length > 1) {
+                    style += "height=" + size[1] + " ";
+                }
+            }
+            formatter = "function(value,rec,index){return 1;}";
         }
-        tagWriter.appendValue(columnTitle);
+        tagWriter.writeAttribute("formatter", formatter);
         tagWriter.endTag();
         if (StringUtils.isNotBlank(dictionary)) {
             StringBuilder js = getSnippets(KEY_JS);
@@ -97,11 +94,11 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
                 }
                 setFormatter(formatter, kv);
             } else {
-                List<SType> typeList = STypeGroup.allTypes.get(dictionary.toLowerCase());
+                List<SDict> typeList = SDictGroup.allTypes.get(dictionary.toLowerCase());
 
                 if (typeList != null && !typeList.isEmpty()) {
-                    for (SType type : typeList) {
-                        kv.put(type.getTypeCode(), type.getTypeName());
+                    for (SDict type : typeList) {
+                        kv.put(type.getDictCode(), type.getDictName());
                     }
                 }
                 setFormatter(formatter, kv);
@@ -120,12 +117,13 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
                     dict.append("var _r_dict_").append(dictionary).append("=[];\n");
                     dict.append("$.post('").append(dictionaryUri).append("',function(data){\n")
                             .append("\t_.forEach(data,function(v,k){")
-                            .append(DATA_DEFINE_PREFIX).append(dictionary).append(".push({'display':k,'value':v})})\n")
+                            .append(DATA_DEFINE_PREFIX).append(dictionary).append(".push({'display':v.text,'value':v.value})})\n")
                             .append("})\n");
                     js.append(dict).append("\n");
                 }
             }
         }
+        getEDataGridTag().addColumn(this.clone());
         return EVAL_PAGE;
     }
 
@@ -146,12 +144,24 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
         formatter.append("var ").append(DATA_DEFINE_PREFIX).append(dictionaryName).append("=").append(JSON.toJSONString(data)).append(";\r\n");
     }
 
+    public String getField() {
+        return field;
+    }
+
     public void setField(String field) {
         this.field = field;
     }
 
+    public String getColumnTitle() {
+        return columnTitle;
+    }
+
     public void setColumnTitle(String columnTitle) {
         this.columnTitle = columnTitle;
+    }
+
+    public String getDictionary() {
+        return dictionary;
     }
 
     public void setDictionary(String dictionary) {
@@ -165,23 +175,63 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag {
         this.query = query;
     }
 
+    public boolean isQuery() {
+        return query;
+    }
+
+    public String getCheckbox() {
+        return checkbox;
+    }
+
     public void setCheckbox(String checkbox) {
         this.checkbox = checkbox;
     }
 
+    public String getEditor() {
+        return editor;
+    }
+
     public void setEditor(String editor) {
-        this.editor = editor;
+        this.editor = editor.trim();
+    }
+
+    public String getFormatter() {
+        return formatter;
     }
 
     public void setFormatter(String formatter) {
         this.formatter = formatter;
     }
 
+    public boolean isSortable() {
+        return sortable;
+    }
+
     public void setSortable(boolean sortable) {
         this.sortable = sortable;
     }
 
+    public String getOrder() {
+        return order;
+    }
+
     public void setOrder(String order) {
         this.order = order;
+    }
+
+    public void setImage(boolean image) {
+        this.isImage = image;
+    }
+
+    public void setImageSize(String imageSize) {
+        this.imageSize = imageSize;
+    }
+
+    public EDataGridColumnTag clone() {
+        try {
+            return (EDataGridColumnTag) super.clone();
+        } catch (CloneNotSupportedException ignored) {
+            return null;
+        }
     }
 }

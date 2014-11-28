@@ -7,8 +7,8 @@ import edu.scup.web.servlet.tags.easyui.vo.DataGridUrl;
 import edu.scup.web.servlet.tags.easyui.vo.OptTypeDirection;
 import edu.scup.web.sys.Globals;
 import edu.scup.web.sys.dao.CommonDao;
-import edu.scup.web.sys.entity.SType;
-import edu.scup.web.sys.entity.STypeGroup;
+import edu.scup.web.sys.entity.SDict;
+import edu.scup.web.sys.entity.SDictGroup;
 import edu.scup.web.sys.service.SystemService;
 import edu.scup.web.sys.util.ContextHolderUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -331,11 +331,11 @@ public class DataGridTag extends RequestContextAwareTag {
             } else {
                 String text = "";
                 String value = "";
-                List<SType> typeList = STypeGroup.allTypes.get(dictionary.toLowerCase());
+                List<SDict> typeList = SDictGroup.allTypes.get(dictionary.toLowerCase());
                 if (typeList != null && !typeList.isEmpty()) {
-                    for (SType type : typeList) {
-                        text += type.getTypeName() + ",";
-                        value += type.getTypeCode() + ",";
+                    for (SDict type : typeList) {
+                        text += type.getDictName() + ",";
+                        value += type.getDictCode() + ",";
                     }
                     setColumn(field, text, value);
                 }
@@ -640,13 +640,13 @@ public class DataGridTag extends RequestContextAwareTag {
                                     }
                                     sb.append("</select>");
                                 } else {
-                                    Map<String, List<SType>> typedatas = STypeGroup.allTypes;
-                                    List<SType> types = typedatas.get(col.getDictionary().toLowerCase());
+                                    Map<String, List<SDict>> typedatas = SDictGroup.allTypes;
+                                    List<SDict> types = typedatas.get(col.getDictionary().toLowerCase());
                                     sb.append("<select name=\"search_EQ_").append(col.getField().replaceAll("_", "\\.")).append("\" WIDTH=\"100\" style=\"width: 104px\"> ");
                                     sb.append("<option value =\"\" >---请选择---</option>");
-                                    for (SType type : types) {
-                                        sb.append(" <option value=\"").append(type.getTypeCode()).append("\">");
-                                        sb.append(type.getTypeName());
+                                    for (SDict type : types) {
+                                        sb.append(" <option value=\"").append(type.getDictCode()).append("\">");
+                                        sb.append(type.getDictName());
                                         sb.append(" </option>");
                                     }
                                     sb.append("</select>");
