@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public class EDataGridColumnTag extends AbstractHtmlElementTag implements Cloneable {
+    private static final long serialVersionUID = 1403854988552009583L;
+
     private TagWriter tagWriter;
     @Autowired
     private SystemService systemService;
@@ -46,16 +48,18 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
             acbf.autowireBean(this);
         }
 
+        EDataGridColumnTag columnTag = this.clone();
+
         tagWriter.startTag("th");
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
-            editor = "{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
-                    + ",valueField: 'value',textField: 'display',required:true}}";
+            columnTag.setEditor("{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
+                    + ",valueField: 'value',textField: 'display',required:true}}");
         }
         tagWriter.writeOptionalAttributeValue("editor", editor);
 
         if (StringUtils.isNotBlank(dictionary) && StringUtils.isBlank(formatter)) {
-            formatter = "format_" + dictionary;
+            columnTag.setFormatter("format_" + dictionary);
         } else if (isImage) {
             String style = "";
             if (StringUtils.isNotBlank(imageSize)) {
@@ -65,9 +69,8 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
                     style += "height=" + size[1] + " ";
                 }
             }
-            formatter = "function(value,rec,index){return 1;}";
+            columnTag.setFormatter("function(value,rec,index){return '<image border=0 " + style + " src='+value+'/>';}");
         }
-        tagWriter.writeAttribute("formatter", formatter);
         tagWriter.endTag();
         if (StringUtils.isNotBlank(dictionary)) {
             StringBuilder js = getSnippets(KEY_JS);
@@ -123,7 +126,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
                 }
             }
         }
-        getEDataGridTag().addColumn(this.clone());
+        getEDataGridTag().addColumn(columnTag);
         return EVAL_PAGE;
     }
 
@@ -227,6 +230,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
         this.imageSize = imageSize;
     }
 
+    @Override
     public EDataGridColumnTag clone() {
         try {
             return (EDataGridColumnTag) super.clone();

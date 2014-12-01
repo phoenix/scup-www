@@ -40,6 +40,21 @@ public class EDataGridTag extends AbstractHtmlElementTag {
     private String sortName;
     private String sortOrder;
     private List<EDataGridColumnTag> columns = new ArrayList<>();
+    private List<DataGridToolBarTag> toolbars = new ArrayList<>();
+    private static final Map<String, String> selfFuncMap = new HashMap<>();
+    private static final Map<String, String> selfFuncCssMap = new HashMap<>();
+
+    static {
+        selfFuncMap.put("addRow", "新增");
+        selfFuncMap.put("destroyRow", "删除");
+        selfFuncMap.put("saveRow", "保存");
+        selfFuncMap.put("cancelRow", "取消");
+
+        selfFuncCssMap.put("addRow", "icon-add");
+        selfFuncCssMap.put("destroyRow", "icon-remove");
+        selfFuncCssMap.put("saveRow", "icon-save");
+        selfFuncCssMap.put("cancelRow", "icon-undo");
+    }
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
@@ -52,6 +67,12 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         //清空资源
         setValue(VALUE_MAP_KEY, new HashMap<String, StringBuilder>());
         columns.clear();
+        toolbars.clear();
+
+        tagWriter.startTag("div");
+        tagWriter.writeAttribute("id", "_dlg");
+        tagWriter.forceBlock();
+        tagWriter.endTag();
 
         tagWriter.startTag("table");
         writeOptionalAttributes(tagWriter);
@@ -135,10 +156,25 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         }
         tagWriter.startTag("div");
         StringBuilder links = new StringBuilder();
-        links.append("<a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" iconCls=\"icon-add\" plain=\"true\" onclick=\"javascript:$('#").append(id).append("').edatagrid('addRow')\">新增</a>");
-        links.append("<a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" iconCls=\"icon-remove\" plain=\"true\" onclick=\"javascript:$('#").append(id).append("').edatagrid('destroyRow')\">删除</a>");
-        links.append("<a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" iconCls=\"icon-save\" plain=\"true\" onclick=\"javascript:$('#").append(id).append("').edatagrid('saveRow')\">保存</a>");
-        links.append("<a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" iconCls=\"icon-undo\" plain=\"true\" onclick=\"javascript:$('#").append(id).append("').edatagrid('cancelRow')\">取消</a>");
+        for (DataGridToolBarTag toolBarTag : toolbars) {
+            String funcName = toolBarTag.getFuncName();
+            boolean selfOperate = selfFuncMap.containsKey(funcName);
+            links.append("<a href=\"");
+            if (funcName == null) {
+                links.append("javascript:window.open('").append(toolBarTag.getUrl()).append("')");
+            } else {
+                links.append("javascript:void(0)");
+            }
+            links.append("\" class=\"easyui-linkbutton\" iconCls=\"")
+                    .append((selfOperate && toolBarTag.getCssClass() == null) ? selfFuncCssMap.get(funcName) : toolBarTag.getCssClass())
+                    .append("\" plain=\"true\" onclick=\"");
+            if (selfOperate) {
+                links.append("javascript:$('#").append(id).append("').edatagrid('").append(funcName).append("')\">")
+                        .append(toolBarTag.getTitle() == null ? selfFuncMap.get(funcName) : toolBarTag.getTitle()).append("</a>");
+            } else {
+                links.append(funcName).append("('").append(toolBarTag.getTitle()).append("','").append(toolBarTag.getUrl()).append("')\">").append(toolBarTag.getTitle()).append("</a>");
+            }
+        }
         tagWriter.appendValue(links.toString());
         tagWriter.endTag();
         tagWriter.endTag();
@@ -181,8 +217,8 @@ public class EDataGridTag extends AbstractHtmlElementTag {
                 }
             }
             String rt = JSON.toJSONString(json);
-            if(column.getFormatter() != null){
-                rt = rt.substring(0,rt.length()-1)+",formatter:"+column.getFormatter()+"}";
+            if (column.getFormatter() != null) {
+                rt = rt.substring(0, rt.length() - 1) + ",formatter:" + column.getFormatter() + "}";
             }
             columnsString.add(rt);
         }
@@ -246,10 +282,6 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         this.destroyUrl = destroyUrl;
     }
 
-    public void addColumn(EDataGridColumnTag column) {
-        this.columns.add(column);
-    }
-
     public void setIdField(String idField) {
         this.idField = idField;
     }
@@ -260,5 +292,13 @@ public class EDataGridTag extends AbstractHtmlElementTag {
 
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public void addColumn(EDataGridColumnTag column) {
+        this.columns.add(column);
+    }
+
+    public void addToolbar(DataGridToolBarTag dataGridToolBarTag) {
+        this.toolbars.add(dataGridToolBarTag);
     }
 }

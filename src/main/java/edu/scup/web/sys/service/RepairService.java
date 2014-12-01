@@ -19,70 +19,70 @@ public class RepairService {
     @Autowired
     private CommonDao commonDao;
     @Autowired
-    private SDictGroupDao typeGroupDao;
+    private SDictGroupDao dictGroupDao;
     @Autowired
-    private SDictDao typeDao;
+    private SDictDao dictDao;
 
     @Transactional
     public void deleteAndRepair() {
         // 由于表中有主外键关系，清空数据库需注意
         LOG.info("重新初始化系统数据");
-        commonDao.executeJpql("delete SType");
-        commonDao.executeJpql("delete STypeGroup");
+        commonDao.executeJpql("delete SDict");
+        commonDao.executeJpql("delete SDictGroup");
 
         repair();
         LOG.info("系统数据初始化成功");
     }
 
     private synchronized void repair() {
-        repairTypeAndGroup();// 修复字典类型
-        repairType();// 修复字典值
+        repairDictAndGroup();// 修复字典类型
+        repairDict();// 修复字典值
     }
 
     /**
      * 修复类型分组表
      */
-    private void repairTypeAndGroup() {
+    private void repairDictAndGroup() {
         SDictGroup sex = new SDictGroup();
         sex.setDictGroupName("性别类");
         sex.setDictGroupCode("sex");
-        typeGroupDao.save(sex);
+        dictGroupDao.save(sex);
 
         SDictGroup bool = new SDictGroup();
         bool.setDictGroupName("布尔值");
         bool.setDictGroupCode("bool");
-        typeGroupDao.save(bool);
+        dictGroupDao.save(bool);
     }
 
     /**
      * 修复类型表
      */
-    private void repairType() {
+    private void repairDict() {
 
-        SDictGroup sex = typeGroupDao.findByDictGroupName("性别类");
+        SDictGroup sex = dictGroupDao.findByDictGroupName("性别类");
         SDict man = new SDict();
         man.setDictName("男性");
         man.setDictCode("1");
         man.setDictGroupId(sex.getId());
-        typeDao.save(man);
+        dictDao.save(man);
 
         SDict woman = new SDict();
         woman.setDictName("女性");
         woman.setDictCode("0");
         woman.setDictGroupId(sex.getId());
-        typeDao.save(woman);
+        dictDao.save(woman);
 
-        SDictGroup bool = typeGroupDao.findByDictGroupName("布尔值");
+        SDictGroup bool = dictGroupDao.findByDictGroupName("布尔值");
         SDict yes = new SDict();
         yes.setDictName("是");
         yes.setDictCode("1");
         yes.setDictGroupId(bool.getId());
-        typeDao.save(yes);
+        dictDao.save(yes);
 
         SDict no = new SDict();
         no.setDictName("否");
         no.setDictCode("0");
         no.setDictGroupId(bool.getId());
-        typeDao.save(no);
+        dictDao.save(no);
     }
 }

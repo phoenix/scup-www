@@ -248,7 +248,7 @@
             <description>是否是冰冻列。默认false</description>
         </attribute>
         <attribute>
-            <name>funname</name>
+            <name>funcName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <description>自定义函数</description>
@@ -307,21 +307,19 @@
             <description>工具条选项URL</description>
         </attribute>
         <attribute>
-            <name>iconCls</name>
+            <name>cssClass</name>
             <rtexprvalue>true</rtexprvalue>
             <description>工具条选项图标class</description>
         </attribute>
         <attribute>
             <name>title</name>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
             <description>工具条选项标题</description>
         </attribute>
         <attribute>
-            <name>funname</name>
-            <required>true</required>
+            <name>funcName</name>
             <rtexprvalue>true</rtexprvalue>
-            <description>工具条选项自定义函数</description>
+            <description>工具条选项自定义函数,表格内编辑的函数有 addRow,destroyRow,saveRow,cancelRow</description>
         </attribute>
         <attribute>
             <name>width</name>

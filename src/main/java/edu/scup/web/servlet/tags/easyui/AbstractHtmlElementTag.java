@@ -18,6 +18,7 @@ public abstract class AbstractHtmlElementTag extends RequestContextAwareTag {
     protected String cssStyle;
     protected String title;
     protected String width;
+    protected String height;
 
     /**
      * Provide a simple template method that calls {@link #createTagWriter()} and passes
@@ -99,5 +100,13 @@ public abstract class AbstractHtmlElementTag extends RequestContextAwareTag {
 
     public String getWidth() {
         return width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }
