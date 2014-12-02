@@ -489,4 +489,33 @@
             <description>自定义大小显示(格式：width,height)</description>
         </attribute>
     </tag>
+
+
+    <tag>
+        <name>dictSelect</name>
+        <tag-class>edu.scup.web.servlet.tags.easyui.DictSelectTag</tag-class>
+        <description>根据字典生成选项框</description>
+        <attribute>
+            <name>path</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>选项名称</description>
+        </attribute>
+        <attribute>
+            <name>dictionary</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>数据字典组编码 或 自定义字典(格式：表名,编码,显示文本)</description>
+        </attribute>
+        <attribute>
+            <name>type</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>控件类型 select|radio|checkbox</description>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>css class</description>
+        </attribute>
+    </tag>
 </taglib>

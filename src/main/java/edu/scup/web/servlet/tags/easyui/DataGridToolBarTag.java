@@ -41,6 +41,10 @@ public class DataGridToolBarTag extends AbstractHtmlElementTag implements Clonea
         return EVAL_PAGE;
     }
 
+    public String getOnclick() {
+        return onclick;
+    }
+
     public void setOnclick(String onclick) {
         this.onclick = onclick;
     }

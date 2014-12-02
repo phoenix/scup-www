@@ -160,7 +160,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
             String funcName = toolBarTag.getFuncName();
             boolean selfOperate = selfFuncMap.containsKey(funcName);
             links.append("<a href=\"");
-            if (funcName == null) {
+            if (funcName == null && toolBarTag.getUrl() != null) {
                 links.append("javascript:window.open('").append(toolBarTag.getUrl()).append("')");
             } else {
                 links.append("javascript:void(0)");
@@ -168,7 +168,9 @@ public class EDataGridTag extends AbstractHtmlElementTag {
             links.append("\" class=\"easyui-linkbutton\" iconCls=\"")
                     .append((selfOperate && toolBarTag.getCssClass() == null) ? selfFuncCssMap.get(funcName) : toolBarTag.getCssClass())
                     .append("\" plain=\"true\" onclick=\"");
-            if (selfOperate) {
+            if (toolBarTag.getOnclick() != null) {
+                links.append(toolBarTag.getOnclick()).append("\">").append(toolBarTag.getTitle()).append("</a>");;
+            } else if (selfOperate) {
                 links.append("javascript:$('#").append(id).append("').edatagrid('").append(funcName).append("')\">")
                         .append(toolBarTag.getTitle() == null ? selfFuncMap.get(funcName) : toolBarTag.getTitle()).append("</a>");
             } else {
