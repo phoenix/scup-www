@@ -73,6 +73,20 @@
         </attribute>
     </tag>
 
+    <tag>
+        <description>生成webuploader上传控件的相关div</description>
+        <name>uploader</name>
+        <tag-class>edu.scup.web.servlet.tags.WebUploaderTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>div中相关id的后缀,用来区分同一个页面中不同的上传控件</description>
+            <name>idSuffix</name>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+        </attribute>
+    </tag>
+
     <!-- extJs相关 -->
     <tag>
         <description>Ext.form.field.ComboBox</description>
