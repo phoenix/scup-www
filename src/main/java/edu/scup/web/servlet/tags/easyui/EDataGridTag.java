@@ -1,8 +1,6 @@
 package edu.scup.web.servlet.tags.easyui;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import edu.scup.web.servlet.tags.easyui.vo.DataGridColumn;
 import edu.scup.web.sys.dao.CommonDao;
 import edu.scup.web.sys.entity.SDict;
 import edu.scup.web.sys.entity.SDictGroup;
@@ -122,7 +120,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
             tagWriter.writeAttribute("style", "display: inline-block;padding: 10px;");
             tagWriter.forceBlock();
             tagWriter.startTag("span");
-            tagWriter.appendValue(column.getTitle());
+            tagWriter.appendValue(column.getColumnTitle());
             tagWriter.endTag();
             String dictionary = column.getDictionary();
             if (dictionary != null) {
@@ -169,7 +167,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
                     .append((selfOperate && toolBarTag.getCssClass() == null) ? selfFuncCssMap.get(funcName) : toolBarTag.getCssClass())
                     .append("\" plain=\"true\" onclick=\"");
             if (toolBarTag.getOnclick() != null) {
-                links.append(toolBarTag.getOnclick()).append("\">").append(toolBarTag.getTitle()).append("</a>");;
+                links.append(toolBarTag.getOnclick()).append("\">").append(toolBarTag.getTitle()).append("</a>");
             } else if (selfOperate) {
                 links.append("javascript:$('#").append(id).append("').edatagrid('").append(funcName).append("')\">")
                         .append(toolBarTag.getTitle() == null ? selfFuncMap.get(funcName) : toolBarTag.getTitle()).append("</a>");
@@ -211,18 +209,16 @@ public class EDataGridTag extends AbstractHtmlElementTag {
             json.put("checkbox", column.getCheckbox());
             json.put("order", column.getOrder());
             String editor = column.getEditor();
-            if (editor != null) {
-                if (editor.startsWith("{") && editor.endsWith("}")) {
-                    json.put("editor", JSON.parse(editor));
-                } else {
-                    json.put("editor", editor);
-                }
-            }
             String rt = JSON.toJSONString(json);
+            StringBuilder sb = new StringBuilder(rt.substring(0, rt.length() - 1));
             if (column.getFormatter() != null) {
-                rt = rt.substring(0, rt.length() - 1) + ",formatter:" + column.getFormatter() + "}";
+                sb.append(",formatter:").append(column.getFormatter());
             }
-            columnsString.add(rt);
+            if (editor != null) {
+                sb.append(",editor:").append(editor);
+            }
+            sb.append("}");
+            columnsString.add(sb.toString());
         }
         js.append(StringUtils.join(columnsString, ",\n"));
         js.append("\n]]\n")
