@@ -130,7 +130,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
                 tagWriter.writeAttribute("value", "");
                 tagWriter.appendValue("---请选择---");
                 tagWriter.endTag();
-                List<SDict> typeList = SDictGroup.allTypes.get(dictionary);
+                List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary);
 
                 if (typeList != null && !typeList.isEmpty()) {
                     for (SDict type : typeList) {

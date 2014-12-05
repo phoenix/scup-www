@@ -22,7 +22,7 @@ public class DictSelectTag extends AbstractHtmlInputElementTag {
             tagWriter.writeAttribute("name", getPath());
             writeDefaultAttributes(tagWriter);
 
-            List<SDict> typeList = SDictGroup.allTypes.get(dictionary.toLowerCase());
+            List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary.toLowerCase());
             tagWriter.startTag("option");
             tagWriter.writeAttribute("value", "");
             tagWriter.forceBlock();
@@ -42,7 +42,7 @@ public class DictSelectTag extends AbstractHtmlInputElementTag {
             }
             tagWriter.endTag();
         } else if ("radio".equals(type)) {
-            List<SDict> typeList = SDictGroup.allTypes.get(dictionary.toLowerCase());
+            List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary.toLowerCase());
             if (typeList != null && !typeList.isEmpty()) {
                 for (SDict type : typeList) {
                     tagWriter.startTag("label");

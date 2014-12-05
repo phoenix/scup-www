@@ -81,6 +81,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
             boolean addFormatter = formatter.length() < 10;
             boolean defineData = dataDefine.length() < 10;
             if (!addFormatter && !defineData) {
+                getEDataGridTag().addColumn(columnTag);
                 return EVAL_PAGE;
             }
             if (addFormatter) {
@@ -97,7 +98,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
                 }
                 setFormatter(formatter, kv);
             } else {
-                List<SDict> typeList = SDictGroup.allTypes.get(dictionary.toLowerCase());
+                List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary.toLowerCase());
 
                 if (typeList != null && !typeList.isEmpty()) {
                     for (SDict type : typeList) {

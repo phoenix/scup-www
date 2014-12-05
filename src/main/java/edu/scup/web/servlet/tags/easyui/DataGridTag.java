@@ -331,7 +331,7 @@ public class DataGridTag extends RequestContextAwareTag {
             } else {
                 String text = "";
                 String value = "";
-                List<SDict> typeList = SDictGroup.allTypes.get(dictionary.toLowerCase());
+                List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary.toLowerCase());
                 if (typeList != null && !typeList.isEmpty()) {
                     for (SDict type : typeList) {
                         text += type.getDictName() + ",";
@@ -640,7 +640,7 @@ public class DataGridTag extends RequestContextAwareTag {
                                     }
                                     sb.append("</select>");
                                 } else {
-                                    Map<String, List<SDict>> typedatas = SDictGroup.allTypes;
+                                    Map<String, List<SDict>> typedatas = SDictGroup.getAllDicts();
                                     List<SDict> types = typedatas.get(col.getDictionary().toLowerCase());
                                     sb.append("<select name=\"search_EQ_").append(col.getField().replaceAll("_", "\\.")).append("\" WIDTH=\"100\" style=\"width: 104px\"> ");
                                     sb.append("<option value =\"\" >---请选择---</option>");

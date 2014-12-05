@@ -10,4 +10,6 @@ public @interface ExcelHeader {
     int headerOrder();
 
     String[] validData() default {};
+
+    String dict() default "";
 }

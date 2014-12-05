@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,10 +22,12 @@ public class SystemService {
 
     public void initAllTypeGroups() {
         List<SDictGroup> typeGroups = typeGroupDao.findAll();
+        Map<String, List<SDict>> allDicts = new HashMap<>();
         for (SDictGroup sTypeGroup : typeGroups) {
             SDictGroup.allDictGroups.put(sTypeGroup.getDictGroupCode().toLowerCase(), sTypeGroup);
             List<SDict> types = typeDao.findByDictGroupId(sTypeGroup.getId());
-            SDictGroup.allTypes.put(sTypeGroup.getDictGroupCode().toLowerCase(), types);
+            allDicts.put(sTypeGroup.getDictGroupCode().toLowerCase(), types);
         }
+        SDictGroup.setAllDicts(allDicts);
     }
 }

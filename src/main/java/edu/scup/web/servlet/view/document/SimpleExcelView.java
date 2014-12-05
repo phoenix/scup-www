@@ -1,6 +1,8 @@
 package edu.scup.web.servlet.view.document;
 
 import edu.scup.data.excel.ExcelHeader;
+import edu.scup.web.sys.entity.SDict;
+import edu.scup.web.sys.entity.SDictGroup;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -83,6 +85,16 @@ public class SimpleExcelView extends AbstractExcelView {
                     Field field = header.getValue();
                     field.setAccessible(true);
                     Object value = field.get(data);
+                    ExcelHeader excelHeader = header.getKey();
+                    String dictName = excelHeader.dict();
+                    if (StringUtils.isNotBlank(dictName) && SDictGroup.getAllDicts().containsKey(dictName)) {
+                        for (SDict dict : SDictGroup.getAllDicts().get(dictName)) {
+                            if (StringUtils.equals(String.valueOf(value), dict.getDictCode())) {
+                                value = dict.getDictName();
+                                break;
+                            }
+                        }
+                    }
                     sheetRow.createCell(col++).setCellValue(value == null ? "" : value.toString());
                 }
             }
