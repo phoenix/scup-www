@@ -1,6 +1,7 @@
 package edu.scup.web.sys.entity;
 
 import edu.scup.data.jpa.repository.domain.UUIDPersistable;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -41,5 +42,14 @@ public class SDictGroup extends UUIDPersistable {
 
     public static void setAllDicts(Map<String, List<SDict>> dicts) {
         allDicts = dicts;
+    }
+
+    public static String getDictCode(String dictGroupCode, String name) {
+        for (SDict dict : SDictGroup.getAllDicts().get(dictGroupCode)) {
+            if (StringUtils.equals(String.valueOf(name), dict.getDictName())) {
+                return dict.getDictCode();
+            }
+        }
+        return name;
     }
 }

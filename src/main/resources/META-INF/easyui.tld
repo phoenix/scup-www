@@ -302,6 +302,9 @@
         <body-content>JSP</body-content>
         <description>列表工具条标签</description>
         <attribute>
+            <name>id</name>
+        </attribute>
+        <attribute>
             <name>url</name>
             <rtexprvalue>true</rtexprvalue>
             <description>工具条选项URL</description>

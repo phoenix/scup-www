@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EDataGridTag extends AbstractHtmlElementTag {
+    private static final long serialVersionUID = 3888335455632937097L;
     private TagWriter tagWriter;
 
     @Autowired
@@ -79,8 +80,8 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         tagWriter.writeAttribute("pagination", pagination);
         tagWriter.writeAttribute("loadMsg", "数据加载中...");
         tagWriter.writeAttribute("rownumbers", showRowNumbers);
-        tagWriter.writeAttribute("pageSize", "15");
-        tagWriter.writeAttribute("pageList", "[15,30,50]");
+        tagWriter.writeAttribute("pageSize", "20");
+        tagWriter.writeAttribute("pageList", "[20,50,100]");
         tagWriter.writeOptionalAttributeValue("fitColumns", fitColumns);
         tagWriter.writeOptionalAttributeValue("singleSelect", singleSelect);
         tagWriter.writeAttribute("toolbar", getToolbar());
@@ -157,7 +158,11 @@ public class EDataGridTag extends AbstractHtmlElementTag {
         for (DataGridToolBarTag toolBarTag : toolbars) {
             String funcName = toolBarTag.getFuncName();
             boolean selfOperate = selfFuncMap.containsKey(funcName);
-            links.append("<a href=\"");
+            links.append("<a ");
+            if (StringUtils.isNotBlank(toolBarTag.getId())) {
+                links.append("id='").append(toolBarTag.getId()).append("' ");
+            }
+            links.append(" href=\"");
             if (funcName == null && toolBarTag.getUrl() != null) {
                 links.append("javascript:window.open('").append(toolBarTag.getUrl()).append("')");
             } else {
@@ -215,7 +220,7 @@ public class EDataGridTag extends AbstractHtmlElementTag {
                 sb.append(",formatter:").append(column.getFormatter());
             }
             if (editor != null) {
-                sb.append(",editor:").append(editor);
+                sb.append(",editor:").append(editor.startsWith("{") && editor.endsWith("}") ? editor : "\'" + editor + "'");
             }
             sb.append("}");
             columnsString.add(sb.toString());
