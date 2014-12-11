@@ -491,6 +491,9 @@
             <rtexprvalue>true</rtexprvalue>
             <description>自定义大小显示(格式：width,height)</description>
         </attribute>
+        <attribute>
+            <name>cssClass</name>
+        </attribute>
     </tag>
 
 
