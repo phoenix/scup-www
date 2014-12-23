@@ -74,6 +74,17 @@
     </tag>
 
     <tag>
+        <description>生成jquery-ui的日期控件</description>
+        <name>calendar_for</name>
+        <tag-class>edu.scup.web.servlet.tags.CalendarForTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
         <description>生成webuploader上传控件的相关div</description>
         <name>uploader</name>
         <tag-class>edu.scup.web.servlet.tags.WebUploaderTag</tag-class>

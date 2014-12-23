@@ -494,6 +494,14 @@
         <attribute>
             <name>cssClass</name>
         </attribute>
+        <attribute>
+            <name>validType</name>
+            <description>
+                表单校验,easy-ui自带的校验有: email url length[0,100] remote['http://.../action.do','paramName']
+                扩展的有: minLength length phone mobile phoneOrMobile idcard floatOrInt currency qq integer chinese english
+                unnormal username faxno zip ip name carNo carenergin same
+            </description>
+        </attribute>
     </tag>
 
 

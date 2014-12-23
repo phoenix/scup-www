@@ -38,6 +38,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
     private String order;
     private boolean isImage;
     private String imageSize;
+    private String validType;
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
@@ -50,13 +51,13 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
 
         EDataGridColumnTag columnTag = this.clone();
 
-        tagWriter.startTag("th");
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
             columnTag.setEditor("{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
                     + ",valueField: 'value',textField: 'display',required:true}}");
+        } else if (StringUtils.equals("validatebox", editor) && StringUtils.isNotBlank(validType)) {
+            columnTag.setEditor("{type: 'validatebox', options: {validType:'" + validType + "'}}");
         }
-        tagWriter.writeOptionalAttributeValue("editor", editor);
 
         if (StringUtils.isNotBlank(dictionary) && StringUtils.isBlank(formatter)) {
             columnTag.setFormatter("format_" + dictionary);
@@ -71,7 +72,6 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
             }
             columnTag.setFormatter("function(value,rec,index){return '<image border=0 " + style + " src='+value+'/>';}");
         }
-        tagWriter.endTag();
         if (StringUtils.isNotBlank(dictionary)) {
             StringBuilder js = getSnippets(KEY_JS);
             //增加formatter函数
@@ -229,6 +229,14 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
 
     public void setImageSize(String imageSize) {
         this.imageSize = imageSize;
+    }
+
+    public String getValidType() {
+        return validType;
+    }
+
+    public void setValidType(String validType) {
+        this.validType = validType;
     }
 
     @Override
