@@ -45,11 +45,20 @@ public class SDictGroup extends UUIDPersistable {
     }
 
     public static String getDictCode(String dictGroupCode, String name) {
-        for (SDict dict : SDictGroup.getAllDicts().get(dictGroupCode)) {
-            if (StringUtils.equals(String.valueOf(name), dict.getDictName())) {
+        for (SDict dict : allDicts.get(dictGroupCode)) {
+            if (StringUtils.equals(name, dict.getDictName())) {
                 return dict.getDictCode();
             }
         }
         return name;
+    }
+
+    public static String getDictValue(String dictGroupCode, String dictCode) {
+        for (SDict dict : allDicts.get(dictGroupCode)) {
+            if (StringUtils.equals(dictCode, dict.getDictCode())) {
+                return dict.getDictName();
+            }
+        }
+        return dictCode;
     }
 }
