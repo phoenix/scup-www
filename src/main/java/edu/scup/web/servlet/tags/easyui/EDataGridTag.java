@@ -142,6 +142,10 @@ public class EDataGridTag extends AbstractHtmlElementTag {
                     }
                 }
                 tagWriter.endTag();
+            } else {
+                tagWriter.startTag("input");
+                tagWriter.writeAttribute("name","search_EQ_" + column.getField());
+                tagWriter.endTag();
             }
             tagWriter.endTag();
         }
