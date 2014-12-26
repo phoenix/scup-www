@@ -30,6 +30,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
     private String dictionary;
     private String dictionaryUri;
     private boolean query;
+    private String queryMode = "single";//字段查询模式：single单字段查询；group范围查询；dateGroup日期范围查询
     private String columnTitle;
     private String checkbox;
     private String editor;
@@ -237,6 +238,14 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
 
     public void setValidType(String validType) {
         this.validType = validType;
+    }
+
+    public String getQueryMode() {
+        return queryMode;
+    }
+
+    public void setQueryMode(String queryMode) {
+        this.queryMode = queryMode;
     }
 
     @Override

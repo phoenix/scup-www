@@ -124,29 +124,64 @@ public class EDataGridTag extends AbstractHtmlElementTag {
             tagWriter.appendValue(column.getColumnTitle());
             tagWriter.endTag();
             String dictionary = column.getDictionary();
-            if (dictionary != null) {
-                tagWriter.startTag("select");
-                tagWriter.writeAttribute("name", "search_EQ_" + column.getField());
-                tagWriter.startTag("option");
-                tagWriter.writeAttribute("value", "");
-                tagWriter.appendValue("---请选择---");
-                tagWriter.endTag();
-                List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary);
+            if ("single".equals(column.getQueryMode())) {
+                if (dictionary != null) {
+                    tagWriter.startTag("select");
+                    tagWriter.writeAttribute("name", "search_EQ_" + column.getField());
+                    tagWriter.startTag("option");
+                    tagWriter.writeAttribute("value", "");
+                    tagWriter.appendValue("---请选择---");
+                    tagWriter.endTag();
+                    List<SDict> typeList = SDictGroup.getAllDicts().get(dictionary);
 
-                if (typeList != null && !typeList.isEmpty()) {
-                    for (SDict type : typeList) {
-                        tagWriter.startTag("option");
-                        tagWriter.writeAttribute("value", type.getDictCode());
-                        tagWriter.appendValue(type.getDictName());
-                        tagWriter.endTag();
+                    if (typeList != null && !typeList.isEmpty()) {
+                        for (SDict type : typeList) {
+                            tagWriter.startTag("option");
+                            tagWriter.writeAttribute("value", type.getDictCode());
+                            tagWriter.appendValue(type.getDictName());
+                            tagWriter.endTag();
+                        }
                     }
+                    tagWriter.endTag();
+                } else {
+                    tagWriter.startTag("input");
+                    tagWriter.writeAttribute("name", "search_EQ_" + column.getField());
+                    tagWriter.endTag();
                 }
-                tagWriter.endTag();
-            } else {
+            } else if ("group".equals(column.getQueryMode()) || "dateGroup".equals(column.getQueryMode())) {
                 tagWriter.startTag("input");
-                tagWriter.writeAttribute("name","search_EQ_" + column.getField());
+                tagWriter.writeAttribute("type", "text");
+                tagWriter.writeAttribute("name", "search_GTE_" + column.getField());
+                tagWriter.writeAttribute("id", column.getField() + "_begin");
+                tagWriter.writeAttribute("style", "width: 94px");
                 tagWriter.endTag();
+
+                tagWriter.startTag("span");
+                tagWriter.writeAttribute("style", "display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;");
+                tagWriter.forceBlock();
+                tagWriter.appendValue("~");
+                tagWriter.endTag();
+
+                tagWriter.startTag("input");
+                tagWriter.writeAttribute("type", "text");
+                tagWriter.writeAttribute("name", "search_LTE_" + column.getField());
+                tagWriter.writeAttribute("id", column.getField() + "_end");
+                tagWriter.writeAttribute("style", "width: 94px");
+                tagWriter.endTag();
+
+                String contextPath = pageContext.getServletContext().getContextPath();
+                if ("dateGroup".equals(column.getQueryMode())) {
+                    getSnippets(KEY_JS).append("\n")
+                            .append("$.datepicker.setDefaults($.extend({showMonthAfterYear: true,showButtonPanel: true,changeYear: true},$.datepicker.regional['zh-CN']));\n")
+                            .append("$(\"#").append(column.getField()).append("_begin").append("\").datepicker({showOn: 'button', buttonImage: '")
+                            .append(contextPath)
+                            .append("/assets/images/calendar.png', buttonImageOnly: true,buttonText:'设置日期',showAnim:'show',duration:'normal'});\n")
+                            .append("$(\"#").append(column.getField()).append("_end").append("\").datepicker({showOn: 'button', buttonImage: '")
+                            .append(contextPath)
+                            .append("/assets/images/calendar.png', buttonImageOnly: true,buttonText:'设置日期',showAnim:'show',duration:'normal'});\n");
+                }
             }
+
             tagWriter.endTag();
         }
         if (!queryColumns.isEmpty()) {

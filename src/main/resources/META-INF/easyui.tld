@@ -448,6 +448,11 @@
             <description>是否添加为查询列</description>
         </attribute>
         <attribute>
+            <name>queryMode</name>
+            <rtexprvalue>true</rtexprvalue>
+            <description>字段查询模式：single(默认：单字段查询),group(范围查询),dateGroup(日期范围查询)</description>
+        </attribute>
+        <attribute>
             <name>checkbox</name>
             <rtexprvalue>true</rtexprvalue>
             <description>True to show a checkbox. The checkbox column has fixed width.</description>

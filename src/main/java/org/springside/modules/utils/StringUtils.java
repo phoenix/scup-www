@@ -24,7 +24,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
         if (Date.class.isAssignableFrom(clz)) {
             try {
-                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(str.trim());
+                str = str.trim();
+                if(str.length() == 10){
+                    return new SimpleDateFormat("yyyy-MM-dd").parse(str);
+                }
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(str);
             } catch (ParseException e) {
                 throw Exceptions.unchecked(e);
             }
