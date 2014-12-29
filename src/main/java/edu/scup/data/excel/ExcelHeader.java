@@ -12,4 +12,6 @@ public @interface ExcelHeader {
     String[] validData() default {};
 
     String dict() default "";
+
+    String formatter() default "";
 }

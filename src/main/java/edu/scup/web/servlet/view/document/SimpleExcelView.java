@@ -1,8 +1,10 @@
 package edu.scup.web.servlet.view.document;
 
 import edu.scup.data.excel.ExcelHeader;
+import edu.scup.util.ReflectionUtils;
 import edu.scup.web.sys.entity.SDict;
 import edu.scup.web.sys.entity.SDictGroup;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -46,7 +48,7 @@ public class SimpleExcelView extends AbstractExcelView {
 
             Class<?> cla = list.get(0).getClass();
             Field[] fields = cla.getDeclaredFields();
-            Map<ExcelHeader, Field> headerMap = new TreeMap<ExcelHeader, Field>(new Comparator<ExcelHeader>() {
+            Map<ExcelHeader, Field> headerMap = new TreeMap<>(new Comparator<ExcelHeader>() {
                 @Override
                 public int compare(ExcelHeader o1, ExcelHeader o2) {
                     return (o1.headerOrder() < o2.headerOrder()) ? -1 : ((o1.headerOrder() == o2.headerOrder()) ? 0 : 1);
@@ -88,13 +90,13 @@ public class SimpleExcelView extends AbstractExcelView {
                     ExcelHeader excelHeader = header.getKey();
                     String dictName = excelHeader.dict();
                     if (StringUtils.isNotBlank(dictName) && SDictGroup.getAllDicts().containsKey(dictName)) {
-                        for (SDict dict : SDictGroup.getAllDicts().get(dictName)) {
-                            if (StringUtils.equals(String.valueOf(value), dict.getDictCode())) {
-                                value = dict.getDictName();
-                                break;
-                            }
-                        }
+                        value = SDictGroup.getDictValue(dictName, String.valueOf(value));
                     }
+                    String formatter = excelHeader.formatter();
+                    if (StringUtils.isNotBlank(formatter)) {
+                        value = ReflectionUtils.invokeMethod(data, formatter, new Class[0], new Object[0]);
+                    }
+
                     sheetRow.createCell(col++).setCellValue(value == null ? "" : value.toString());
                 }
             }
