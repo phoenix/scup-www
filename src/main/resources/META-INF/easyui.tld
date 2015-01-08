@@ -468,6 +468,10 @@
             </description>
         </attribute>
         <attribute>
+            <name>required</name>
+            <description>whether combobox value is required.</description>
+        </attribute>
+        <attribute>
             <name>width</name>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

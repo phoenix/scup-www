@@ -40,6 +40,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
     private boolean isImage;
     private String imageSize;
     private String validType;
+    private boolean required;
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
@@ -55,7 +56,7 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
             columnTag.setEditor("{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
-                    + ",valueField: 'value',textField: 'display',required:true}}");
+                    + ",valueField: 'value',textField: 'display',required:" + required + "}}");
         } else if (StringUtils.equals("validatebox", editor) && StringUtils.isNotBlank(validType)) {
             columnTag.setEditor("{type: 'validatebox', options: {validType:'" + validType + "'}}");
         }
@@ -246,6 +247,14 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
 
     public void setQueryMode(String queryMode) {
         this.queryMode = queryMode;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
     @Override
