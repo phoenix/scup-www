@@ -219,6 +219,12 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
     }
 
     @Override
+    public List<T> findAll(Collection<SearchFilter> filters) {
+        Specification<T> specifications = DynamicSpecifications.bySearchFilter(filters, entityClazz);
+        return findAll(specifications);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Page<T> findHPage(Pageable pageRequest, Collection<SearchFilter> filters) {
         Criterion[] criterions = DynamicSpecifications.buildCriterions(filters, entityClazz);

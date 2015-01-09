@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @NoRepositoryBean
 public interface JpaRepositoryExt<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
@@ -52,6 +53,8 @@ public interface JpaRepositoryExt<T, ID extends Serializable> extends JpaReposit
      * 按属性过滤条件列表分页查找对象.
      */
     public Page<T> findPage(final Pageable pageRequest, final Collection<SearchFilter> filters);
+
+    List<T> findAll(final Collection<SearchFilter> filters);
 
     /**
      * 按属性过滤条件列表分页查找对象.
