@@ -1,6 +1,7 @@
 package org.springside.modules.persistence;
 
 import com.google.common.collect.Lists;
+import edu.scup.data.jpa.repository.domain.LogicalDeletable;
 import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springside.modules.utils.StringUtils;
-import edu.scup.data.jpa.repository.domain.LogicalDeletable;
 
 import javax.persistence.criteria.*;
 import java.io.Serializable;
@@ -68,7 +68,9 @@ public class DynamicSpecifications {
                                     }
                                 }
                             }
-                            value = StringUtils.stringToObject(String.valueOf(value), clz);
+                            if (!clz.isInterface()) {
+                                value = StringUtils.stringToObject(String.valueOf(value), clz);
+                            }
                         }
 
                         // logic operator
