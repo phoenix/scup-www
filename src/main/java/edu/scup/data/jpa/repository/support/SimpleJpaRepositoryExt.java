@@ -17,6 +17,7 @@ import org.hibernate.transform.ResultTransformer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
@@ -29,6 +30,7 @@ import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
@@ -148,6 +150,16 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
                     return builder.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
             });
+        }
+    }
+
+    @Override
+    public T findFirst(final Collection<SearchFilter> filters, final Sort sort) {
+        Specification<T> specifications = DynamicSpecifications.bySearchFilter(filters, entityClazz);
+        try {
+            return getQuery(specifications, sort).setMaxResults(1).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         }
     }
 

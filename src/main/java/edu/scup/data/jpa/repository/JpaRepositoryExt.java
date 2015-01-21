@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -46,6 +47,8 @@ public interface JpaRepositoryExt<T, ID extends Serializable> extends JpaReposit
     T findOneByJpql(final String jpql, final Object... params);
 
     T findOne(ID id, boolean includeLogicalDeleted);
+
+    T findFirst(final Collection<SearchFilter> filters, final Sort sort);
 
     void logicalDelete(ID id);
 
