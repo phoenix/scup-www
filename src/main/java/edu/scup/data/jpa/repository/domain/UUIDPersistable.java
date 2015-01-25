@@ -1,5 +1,7 @@
 package edu.scup.data.jpa.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import edu.scup.web.servlet.view.json.BaseView;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 
@@ -16,6 +18,7 @@ public abstract class UUIDPersistable implements Persistable<String> {
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     @Column(name = "ID", nullable = false, length = 32)
+    @JsonView(BaseView.Id.class)
     private String id;
 
     public String getId() {

@@ -1,6 +1,6 @@
 package edu.scup.data.redis;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.BuilderFactory;
@@ -23,6 +23,8 @@ import java.util.concurrent.Callable;
 public class JedisUtil {
     private static final Logger logger = LoggerFactory.getLogger(JedisUtil.class);
     private static final String DEFAULT_CHARSET = "UTF-8";
+    //http://wiki.fasterxml.com/JacksonFAQThreadSafety ObjectMapper是线程安全的
+    private static final ObjectMapper mapper = new ObjectMapper();
     private MasterSlavePool jedisPool;
     private JedisStatistics jedisStatistics = new JedisStatistics();
     private ObjectName oname;
@@ -394,7 +396,7 @@ public class JedisUtil {
 
     public String setJson(final String key, Object value, final int seconds) {
         try (Jedis jedis = jedisPool.getMasterResource()) {
-            return jedis.setex(key.getBytes(DEFAULT_CHARSET), seconds, JSON.toJSONBytes(value));
+            return jedis.setex(key.getBytes(DEFAULT_CHARSET), seconds, mapper.writeValueAsBytes(value));
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -441,7 +443,7 @@ public class JedisUtil {
         try (Jedis jedis = jedisPool.getReadableResource()) {
             byte[] bytes = jedis.get(key.getBytes(DEFAULT_CHARSET));
             if (bytes != null && bytes.length > 1) {
-                return JSON.parseObject(bytes, clz);
+                return mapper.readValue(bytes, clz);
             } else {
                 return null;
             }
@@ -456,7 +458,7 @@ public class JedisUtil {
             byte[] bytes = jedis.get(key.getBytes(DEFAULT_CHARSET));
             if (bytes != null && bytes.length > 1) {
                 jedisStatistics.commandGetExecuted(true);
-                return JSON.parseObject(bytes, clz);
+                return mapper.readValue(bytes, clz);
             } else {
                 jedisStatistics.commandGetExecuted(false);
                 T value = ifAbsent.call();
@@ -476,7 +478,8 @@ public class JedisUtil {
             byte[] bytes = jedis.get(key.getBytes(DEFAULT_CHARSET));
             if (bytes != null && bytes.length > 1) {
                 jedisStatistics.commandGetExecuted(true);
-                return JSON.parseArray(new String(bytes, DEFAULT_CHARSET), clz);
+                return mapper.readValue(new String(bytes, DEFAULT_CHARSET)
+                        , mapper.getTypeFactory().constructCollectionType(List.class, clz));
             } else {
                 jedisStatistics.commandGetExecuted(false);
                 List<T> value = ifAbsent.call();

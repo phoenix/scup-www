@@ -1,6 +1,6 @@
 package edu.scup.web.util.ext;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -9,12 +9,14 @@ import org.springframework.data.domain.Sort;
 import org.springside.modules.persistence.SearchFilter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ExtJsUtils {
     private static final Logger logger = LoggerFactory.getLogger(ExtJsUtils.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static Pageable getPage(HttpServletRequest request) {
         int page = 0;
@@ -43,7 +45,12 @@ public abstract class ExtJsUtils {
         if (filterJson == null) {
             return filters;
         }
-        List<Map> list = JSON.parseArray(filterJson, Map.class);
+        List<Map> list = null;
+        try {
+            list = mapper.readValue(filterJson, mapper.getTypeFactory().constructCollectionType(List.class, Map.class));
+        } catch (IOException e) {
+            logger.error("", e);
+        }
         for (Map map : list) {
             if ("list".equals(map.get("type"))) {
                 List value = (List) map.get("value");

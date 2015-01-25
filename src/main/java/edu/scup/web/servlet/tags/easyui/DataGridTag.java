@@ -1,6 +1,6 @@
 package edu.scup.web.servlet.tags.easyui;
 
-import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.scup.web.servlet.tags.easyui.vo.ColumnValue;
 import edu.scup.web.servlet.tags.easyui.vo.DataGridColumn;
 import edu.scup.web.servlet.tags.easyui.vo.DataGridUrl;
@@ -31,6 +31,8 @@ import java.util.*;
 public class DataGridTag extends RequestContextAwareTag {
     private static final long serialVersionUID = -8935249060219993990L;
     private static final Logger LOG = LoggerFactory.getLogger(DataGridTag.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     protected String fields = "";// 显示字段
     protected String searchFields = "";// 查询字段  Author:qiulu  Date:20130618 for：添加对区间查询的支持
     protected String name;// 表格标示
@@ -719,20 +721,21 @@ public class DataGridTag extends RequestContextAwareTag {
      * @return
      */
     private String extendAttribute(String field) {
-        if (StringUtils.isEmpty(field)) {
+        return "";
+        /*if (StringUtils.isEmpty(field)) {
             return "";
         }
         field = dealSyscode(field, 1);
         StringBuilder re = new StringBuilder();
         try {
-            JSONObject obj = JSONObject.parseObject(field);
-            for (Map.Entry<String, Object> o : obj.entrySet()) {
+            JsonNode obj = mapper.readTree(field);
+            for (Map.Entry<String, Object> o : obj) {
                 String key = o.getKey();
-                JSONObject nextObj = ((JSONObject) obj.get(key));
-                Iterator<Map.Entry<String, Object>> itvalue = nextObj.entrySet().iterator();
+                JsonNode nextObj = obj.get(key);
+                Iterator<JsonNode> itvalue = nextObj.iterator();
                 re.append(key).append("=").append("\"");
                 if (nextObj.size() <= 1) {
-                    String onlykey = itvalue.next().getKey();
+                    String onlykey = itvalue.next().ge;
                     if ("value".equals(onlykey)) {
                         re.append(nextObj.get(onlykey)).append("");
                     } else {
@@ -752,7 +755,7 @@ public class DataGridTag extends RequestContextAwareTag {
             e.printStackTrace();
             return "";
         }
-        return dealSyscode(re.toString(), 2);
+        return dealSyscode(re.toString(), 2);*/
     }
 
     /**

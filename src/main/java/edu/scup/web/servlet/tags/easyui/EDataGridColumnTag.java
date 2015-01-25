@@ -1,6 +1,7 @@
 package edu.scup.web.servlet.tags.easyui;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.scup.web.sys.dao.CommonDao;
 import edu.scup.web.sys.entity.SDict;
 import edu.scup.web.sys.entity.SDictGroup;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 public class EDataGridColumnTag extends AbstractHtmlElementTag implements Cloneable {
     private static final long serialVersionUID = 1403854988552009583L;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     private TagWriter tagWriter;
     @Autowired
@@ -147,7 +149,11 @@ public class EDataGridColumnTag extends AbstractHtmlElementTag implements Clonea
             m.put("display", map.get(key));
             data.add(m);
         }
-        formatter.append("var ").append(DATA_DEFINE_PREFIX).append(dictionaryName).append("=").append(JSON.toJSONString(data)).append(";\r\n");
+        try {
+            formatter.append("var ").append(DATA_DEFINE_PREFIX).append(dictionaryName).append("=").append(mapper.writeValueAsString(data)).append(";\r\n");
+        } catch (JsonProcessingException e) {
+            logger.error("", e);
+        }
     }
 
     public String getField() {

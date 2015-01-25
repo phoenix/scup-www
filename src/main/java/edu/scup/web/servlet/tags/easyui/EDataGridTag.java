@@ -1,6 +1,7 @@
 package edu.scup.web.servlet.tags.easyui;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.scup.web.sys.dao.CommonDao;
 import edu.scup.web.sys.entity.SDict;
 import edu.scup.web.sys.entity.SDictGroup;
@@ -19,6 +20,8 @@ import java.util.Map;
 
 public class EDataGridTag extends AbstractHtmlElementTag {
     private static final long serialVersionUID = 3888335455632937097L;
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     private TagWriter tagWriter;
 
     @Autowired
@@ -253,7 +256,12 @@ public class EDataGridTag extends AbstractHtmlElementTag {
             json.put("checkbox", column.getCheckbox());
             json.put("order", column.getOrder());
             String editor = column.getEditor();
-            String rt = JSON.toJSONString(json);
+            String rt = "";
+            try {
+                rt = mapper.writeValueAsString(json);
+            } catch (JsonProcessingException e) {
+                logger.error("", e);
+            }
             StringBuilder sb = new StringBuilder(rt.substring(0, rt.length() - 1));
             if (column.getFormatter() != null) {
                 sb.append(",formatter:").append(column.getFormatter());
