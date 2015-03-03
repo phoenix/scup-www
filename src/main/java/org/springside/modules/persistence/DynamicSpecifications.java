@@ -78,6 +78,9 @@ public class DynamicSpecifications {
                             case EQ:
                                 predicates.add(builder.equal(expression, value));
                                 break;
+                            case NE:
+                                predicates.add(builder.notEqual(expression, value));
+                                break;
                             case LIKE:
                                 predicates.add(builder.like(expression, "%" + value + "%"));
                                 break;
@@ -133,6 +136,9 @@ public class DynamicSpecifications {
             switch (filter.operator) {
                 case EQ:
                     criterionList.add(Restrictions.eq(expression, value));
+                    break;
+                case NE:
+                    criterionList.add(Restrictions.ne(expression, value));
                     break;
                 case LIKE:
                     criterionList.add(Restrictions.like(expression, (String) value, MatchMode.ANYWHERE));
