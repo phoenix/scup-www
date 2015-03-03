@@ -27,6 +27,7 @@ public class MasterSlavePool {
     protected String masterHost;
     protected int masterPort;
     protected int timeout;
+    protected String password;
 
     /**
      * Using this constructor means you have to set and initialize the
@@ -36,10 +37,15 @@ public class MasterSlavePool {
     }
 
     public MasterSlavePool(final GenericObjectPoolConfig poolConfig, final String host, final int port, final int timeout) throws Exception {
+        this(poolConfig, host, port, timeout, null);
+    }
+
+    public MasterSlavePool(final GenericObjectPoolConfig poolConfig, final String host, final int port, final int timeout, final String password) throws Exception {
         this.poolConfig = poolConfig;
         this.masterHost = host;
         this.masterPort = port;
         this.timeout = timeout;
+        this.password = password;
     }
 
     @PostConstruct
