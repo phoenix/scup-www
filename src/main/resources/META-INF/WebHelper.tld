@@ -57,7 +57,7 @@
         <attribute>
             <name>action</name>
             <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>confirm</name>

@@ -1,23 +1,19 @@
 package edu.scup.data.jpa.repository.domain;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Abstract base class for auditable entities. Stores the audition values in persistent fields.
  *
- * @param <PK> the type of the auditing type's idenifier
  * @see org.springframework.data.jpa.domain.AbstractAuditable
  */
 @MappedSuperclass
-public abstract class AbstractAuditable<U, PK extends Serializable> extends AbstractPersistable<PK>
-        implements Auditable<U, PK> {
+public abstract class AbstractUUIDAuditable<U> extends UUIDPersistable
+        implements Auditable<U, String> {
 
     private static final long serialVersionUID = -2363991186256484787L;
 
@@ -68,14 +64,5 @@ public abstract class AbstractAuditable<U, PK extends Serializable> extends Abst
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    /**
-     * Sets the id of the entity.
-     *
-     * @param id the id to set
-     */
-    public void setId(final PK id) {
-        super.setId(id);
     }
 }
