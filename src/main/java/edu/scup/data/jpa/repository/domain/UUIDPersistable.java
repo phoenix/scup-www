@@ -2,6 +2,7 @@ package edu.scup.data.jpa.repository.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.scup.web.servlet.view.json.BaseView;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 
@@ -26,7 +27,9 @@ public abstract class UUIDPersistable implements Persistable<String> {
     }
 
     public void setId(String id) {
-        this.id = id;
+        if(StringUtils.isNotBlank(id)){
+            this.id = id;
+        }
     }
 
     @Override

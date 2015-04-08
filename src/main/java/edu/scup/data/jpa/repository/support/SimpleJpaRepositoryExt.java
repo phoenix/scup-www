@@ -2,10 +2,10 @@ package edu.scup.data.jpa.repository.support;
 
 import com.google.common.collect.Lists;
 import edu.scup.data.jpa.repository.JpaRepositoryExt;
+import edu.scup.data.jpa.repository.domain.Auditable;
 import edu.scup.data.jpa.repository.domain.LogicalDeletable;
-import edu.scup.data.jpa.repository.domain.OmsAuditable;
 import edu.scup.util.ReflectionUtils;
-import edu.scup.web.util.OmsCurrentUser;
+import edu.scup.web.sys.util.ContextHolderUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -179,14 +179,14 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
     @Override
     @SuppressWarnings("unchecked")
     public <S extends T> S save(S entity) {
-        if (entity instanceof OmsAuditable) {
-            OmsAuditable auditEntity = (OmsAuditable) entity;
+        if (entity instanceof Auditable) {
+            Auditable auditEntity = (Auditable) entity;
             if (auditEntity.isNew()) {
-                auditEntity.setCreatedBy(OmsCurrentUser.getLoginname());
+                auditEntity.setCreatedBy(ContextHolderUtils.getCurrentUser());
                 auditEntity.setCreatedDate(new Date());
             } else {
                 if (auditEntity.getCreatedDate() == null) {//可能没有将数据库中的audit信息赋值给要入库的对象
-                    OmsAuditable db = (OmsAuditable) findOne((ID) auditEntity.getId());
+                    Auditable db = (Auditable) findOne((ID) auditEntity.getId());
                     auditEntity.setCreatedBy(db.getCreatedBy());
                     auditEntity.setCreatedDate(db.getCreatedDate());
                     if (entity instanceof LogicalDeletable) {
@@ -194,7 +194,7 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
                     }
                 }
                 auditEntity.setLastModifiedDate(new Date());
-                auditEntity.setLastModifiedBy(OmsCurrentUser.getLoginname());
+                auditEntity.setLastModifiedBy(ContextHolderUtils.getCurrentUser());
             }
         }
         return super.save(entity);
