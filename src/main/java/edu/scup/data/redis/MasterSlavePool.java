@@ -27,6 +27,7 @@ public class MasterSlavePool {
     protected String masterHost;
     protected int masterPort;
     protected int timeout;
+    protected String password;
 
     /**
      * Using this constructor means you have to set and initialize the
@@ -36,10 +37,15 @@ public class MasterSlavePool {
     }
 
     public MasterSlavePool(final GenericObjectPoolConfig poolConfig, final String host, final int port, final int timeout) throws Exception {
+        this(poolConfig, host, port, timeout, null);
+    }
+
+    public MasterSlavePool(final GenericObjectPoolConfig poolConfig, final String host, final int port, final int timeout, final String password) throws Exception {
         this.poolConfig = poolConfig;
         this.masterHost = host;
         this.masterPort = port;
         this.timeout = timeout;
+        this.password = password;
     }
 
     @PostConstruct
@@ -54,7 +60,7 @@ public class MasterSlavePool {
         String clientName = System.getProperty("app.name");
         poolConfig.setJmxNameBase("redis.pool:redis=" + redisName + ",name=");
         poolConfig.setJmxNamePrefix("master");
-        this.masterPool = new JedisPool(poolConfig, masterHost, masterPort, timeout, null, Protocol.DEFAULT_DATABASE, clientName);
+        this.masterPool = new JedisPool(poolConfig, masterHost, masterPort, timeout, password, Protocol.DEFAULT_DATABASE, clientName);
 
         Jedis jedis = masterPool.getResource();
         String replication = jedis.info("Replication");
@@ -77,7 +83,7 @@ public class MasterSlavePool {
                     GenericObjectPoolConfig slavePoolConfig = poolConfig.clone();
                     slavePoolConfig.setJmxNamePrefix("slave");
                     slavePool = new JedisPool(slavePoolConfig, slaveHost, Integer.parseInt(slavePort)
-                            , timeout, null, Protocol.DEFAULT_DATABASE, clientName);
+                            , timeout, password, Protocol.DEFAULT_DATABASE, clientName);
                     logger.info("created redis slave pool {}:{}", slaveHost, slavePort);
                     break;
                 }
