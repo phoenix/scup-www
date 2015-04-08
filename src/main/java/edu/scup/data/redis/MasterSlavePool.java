@@ -1,5 +1,6 @@
 package edu.scup.data.redis;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,9 @@ public class MasterSlavePool {
         this.masterHost = host;
         this.masterPort = port;
         this.timeout = timeout;
-        this.password = password;
+        if(StringUtils.isNotBlank(password)){
+            this.password = password;
+        }
     }
 
     @PostConstruct
