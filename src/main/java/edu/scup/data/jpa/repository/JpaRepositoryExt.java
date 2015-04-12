@@ -55,20 +55,22 @@ public interface JpaRepositoryExt<T, ID extends Serializable> extends JpaReposit
     /**
      * 按属性过滤条件列表分页查找对象.
      */
-    public Page<T> findPage(final Pageable pageRequest, final Collection<SearchFilter> filters);
+    Page<T> findPage(final Pageable pageRequest, final Collection<SearchFilter> filters);
 
     List<T> findAll(final Collection<SearchFilter> filters);
+
+    List<T> findLimit(final Collection<SearchFilter> filters, final Pageable pageRequest);
 
     /**
      * 按属性过滤条件列表分页查找对象.
      */
-    public Page<T> findPage(final Pageable pageRequest, final Collection<SearchFilter> filters, boolean autoExcludeLogicalDeleted);
+    Page<T> findPage(final Pageable pageRequest, final Collection<SearchFilter> filters, boolean autoExcludeLogicalDeleted);
 
     /**
      * <p>按属性过滤条件列表分页查找对象,支持Array等特殊native sql查询</p>
      * 对于标准JPA支持的查询,建议使用{@link #findPage(Pageable, Collection)}
      */
-    public Page<T> findHPage(final Pageable pageRequest, final Collection<SearchFilter> filters);
+    Page<T> findHPage(final Pageable pageRequest, final Collection<SearchFilter> filters);
 
     /**
      * Merge the state of the given entity into the current persistence context.
@@ -76,11 +78,11 @@ public interface JpaRepositoryExt<T, ID extends Serializable> extends JpaReposit
      * @param entity entity instance
      * @return the managed instance that the state was merged to
      */
-    public T merge(T entity);
+    T merge(T entity);
 
-    public Session getSession();
+    Session getSession();
 
-    public Criteria createCriteria(final Criterion... criterions);
+    Criteria createCriteria(final Criterion... criterions);
 
-    public Criteria createCriteria(Class entityClass, Criterion... criterions);
+    Criteria createCriteria(Class entityClass, Criterion... criterions);
 }

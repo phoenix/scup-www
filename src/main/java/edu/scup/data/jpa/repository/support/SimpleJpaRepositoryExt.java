@@ -237,6 +237,12 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
     }
 
     @Override
+    public List<T> findLimit(final Collection<SearchFilter> filters, final Pageable pageRequest){
+        Specification<T> specifications = DynamicSpecifications.bySearchFilter(filters, entityClazz);
+        return getQuery(specifications, pageRequest).setFirstResult(pageRequest.getOffset()).setMaxResults(pageRequest.getPageSize()).getResultList();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Page<T> findHPage(Pageable pageRequest, Collection<SearchFilter> filters) {
         Criterion[] criterions = DynamicSpecifications.buildCriterions(filters, entityClazz);
