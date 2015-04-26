@@ -163,6 +163,7 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
         }
     }
 
+    @Transactional
     @Override
     public void logicalDelete(ID id) {
         T entity = findOne(id);
