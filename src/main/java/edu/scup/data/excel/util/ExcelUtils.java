@@ -5,7 +5,7 @@ import edu.scup.data.util.ValidateUtil;
 import edu.scup.web.sys.entity.SDictGroup;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.springside.modules.utils.StringUtils;
+import cn.wujc.util.StringUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;

@@ -13,7 +13,7 @@ import org.hibernate.type.StringType;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
-import org.springside.modules.utils.StringUtils;
+import cn.wujc.util.StringUtils;
 
 import javax.persistence.criteria.*;
 import java.io.Serializable;

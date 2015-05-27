@@ -118,4 +118,17 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+
+    <!-- functions -->
+    <function>
+        <description>
+            Tests if an input string contains the specified substring.
+        </description>
+        <name>defaultIfBlank</name>
+        <function-class>cn.wujc.util.StringUtils</function-class>
+        <function-signature>java.lang.String defaultIfBlank(java.lang.String,java.lang.String)</function-signature>
+        <example>
+            ${h:defaultIfBlank(str, defaultStr)}
+        </example>
+    </function>
 </taglib>
