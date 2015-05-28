@@ -1,6 +1,22 @@
-plugins {
-    id "com.jfrog.bintray" version "1.1"
+/*plugins {
     id 'maven'
+    id "com.jfrog.bintray" version "1.2"
+    id "com.jfrog.artifactory" version "3.1.1"
+}*/
+
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.bintray"
+apply plugin: "com.jfrog.artifactory"
+apply plugin: 'optional-base'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.+'
+    }
 }
 
 buildDir = "../public/${moduleName}"
@@ -12,10 +28,6 @@ ext {
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
-    configurations {
-        optional
-        compile.extendsFrom optional
-    }
     repositories {
         jcenter()
     }
@@ -26,12 +38,6 @@ allprojects {
                 excludeDirs << file("$it")
             }
         }
-    }
-}
-
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: new File("../mvnrepo").toURI())
     }
 }
 
@@ -64,42 +70,51 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-artifacts {
-    archives jar
-    archives sourceJar
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar
+        }
+    }
+    repositories{
+        maven{
+            url new File("../mvnrepo").toURI()
+        }
+    }
 }
-
 Properties properties = new Properties()
 properties.load(new FileInputStream("${System.properties['user.home']}/bintray.properties"))
+artifactory {
+    contextUrl = 'http://oss.jfrog.org/artifactory'
+    resolve {
+        repository {
+            repoKey = 'libs-release'
+        }
+    }
+    publish {
+        repository {
+            repoKey = 'oss-snapshot-local' //The Artifactory repository key to publish to
+            username =  properties.getProperty("bintray.user")
+            password = properties.getProperty("bintray.apikey")
+            maven = true
+        }
+        defaults {
+            publications('mavenJava')
+            publishArtifacts = true
+        }
+    }
+}
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "java-core"	//发布到JCenter上的项目名字
+        name = "java-utils"	//发布到JCenter上的项目名字
         websiteUrl = "http://wujc.cn"
         licenses = ["Apache-2.0"]
         publish = true
-    }
-}
-
-// Add a temporary new optional scope
-Conf2ScopeMappingContainer scopeMappings = project.conf2ScopeMappings
-scopeMappings.addMapping(MavenPlugin.COMPILE_PRIORITY + 2, project.configurations.getByName("optional"), "optional")
-// Add a hook to replace the optional scope
-project.tasks.withType(Upload).each { applyToUploadTask(project, it) }
-
-private void applyToUploadTask(Project project, Upload upload) {
-    upload.repositories.withType(PomFilterContainer).each { applyToPom(project, it) }
-}
-
-private void applyToPom(Project project, PomFilterContainer pomContainer) {
-    pomContainer.pom.whenConfigured { MavenPom pom ->
-        pom.dependencies.findAll { it.scope == "optional" }.each {
-            it.scope = "compile"
-            it.optional = true
-        }
     }
 }
 
@@ -107,40 +122,40 @@ dependencies {
 
     /* OMS */
     compile "org.jasig.cas.client:cas-client-core:3.2.1"
-    optional "org.apache.shiro:shiro-cas:${shiroVersion}"
-    optional "org.apache.shiro:shiro-spring:${shiroVersion}"
+    compile "org.apache.shiro:shiro-cas:${shiroVersion}", optional
+    compile "org.apache.shiro:shiro-spring:${shiroVersion}", optional
 
     /* J2EE */
-    optional "javax.servlet:javax.servlet-api:3.1.0"
-    optional "javax.servlet.jsp:jsp-api:2.2"
+    compile "javax.servlet:javax.servlet-api:3.1.0", optional
+    compile "javax.servlet.jsp:jsp-api:2.2", optional
 
     /* spring */
     compile("org.springframework:spring-context-support:${springVersion}")
     compile("org.springframework:spring-orm:${springVersion}")
     compile("org.springframework:spring-tx:${springVersion}")
     compile("org.springframework:spring-webmvc:${springVersion}")
-    optional("org.springframework:spring-test:${springVersion}")
-    optional("org.springframework.data:spring-data-jpa:${springDataJpaVersion}")
+    compile("org.springframework:spring-test:${springVersion}", optional)
+    compile("org.springframework.data:spring-data-jpa:${springDataJpaVersion}", optional)
 
     /* ORM */
     compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
     compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
 
     /* Excel & PDF */
-    optional "org.apache.poi:poi:3.9"
-    optional "org.apache.poi:poi-ooxml:3.9"
-    optional "com.itextpdf:itextpdf:5.5.0"
-    optional "com.itextpdf:itext-asian:5.2.0"
-    optional "org.xhtmlrenderer:flying-saucer-pdf-itext5:9.0.6"
+    compile "org.apache.poi:poi:3.9", optional
+    compile "org.apache.poi:poi-ooxml:3.9", optional
+    compile "com.itextpdf:itextpdf:5.5.0", optional
+    compile "com.itextpdf:itext-asian:5.2.0", optional
+    compile "org.xhtmlrenderer:flying-saucer-pdf-itext5:9.0.6", optional
 
     /* commons */
-    optional("org.apache.commons:commons-lang3:3.3.2")
-    optional("org.apache.commons:commons-pool2:2.3")
-    optional("commons-codec:commons-codec:1.9")
-    optional "commons-collections:commons-collections:3.2.1"
-    optional("commons-beanutils:commons-beanutils:1.9.0")
-    optional "commons-io:commons-io:2.4"
-    optional "com.google.guava:guava:18.0"
+    compile("org.apache.commons:commons-lang3:3.3.2", optional)
+    compile("org.apache.commons:commons-pool2:2.3", optional)
+    compile("commons-codec:commons-codec:1.9", optional)
+    compile "commons-collections:commons-collections:3.2.1", optional
+    compile("commons-beanutils:commons-beanutils:1.9.0", optional)
+    compile "commons-io:commons-io:2.4", optional
+    compile "com.google.guava:guava:18.0", optional
 
     compile("org.slf4j:slf4j-api:1.7.7")
 
@@ -149,7 +164,7 @@ dependencies {
 
     /** Others */
     compile "org.freemarker:freemarker:2.3.20"
-    optional("net.sf.ehcache:ehcache-core:2.6.9")
-    optional("redis.clients:jedis:2.6.2")
+    compile("net.sf.ehcache:ehcache-core:2.6.9", optional)
+    compile("redis.clients:jedis:2.6.2", optional)
     compile "com.fasterxml.jackson.core:jackson-databind:2.4.3"
 }
