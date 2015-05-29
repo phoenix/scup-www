@@ -111,7 +111,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "java-utils"	//发布到JCenter上的项目名字
+        name = "java-utils"	//鍙戝竷鍒癑Center涓婄殑椤圭洰鍚嶅瓧
         websiteUrl = "http://wujc.cn"
         licenses = ["Apache-2.0"]
         publish = true
