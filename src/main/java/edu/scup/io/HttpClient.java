@@ -64,7 +64,7 @@ public class HttpClient {
             conn.getOutputStream().write(body);
 
             if (conn.getResponseCode() != 200) {
-                logger.error("response error {},request {}", IOUtils.toString(conn.getErrorStream()), body);
+                logger.error("response error {},request {}", IOUtils.toString(conn.getErrorStream()), new String(body));
                 return "";
             }
 
