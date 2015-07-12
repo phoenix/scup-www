@@ -183,7 +183,9 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
         if (entity instanceof Auditable) {
             Auditable auditEntity = (Auditable) entity;
             if (auditEntity.isNew()) {
-                auditEntity.setCreatedBy(ContextHolderUtils.getCurrentUser());
+                if(auditEntity.getCreatedBy() == null){
+                    auditEntity.setCreatedBy(ContextHolderUtils.getCurrentUser());
+                }
                 auditEntity.setCreatedDate(new Date());
             } else {
                 if (auditEntity.getCreatedDate() == null) {//可能没有将数据库中的audit信息赋值给要入库的对象
