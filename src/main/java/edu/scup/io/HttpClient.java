@@ -1,5 +1,6 @@
 package edu.scup.io;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class HttpClient {
     private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.13 Safari/537.36";
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
     public static boolean useProxy;
     private static final int socketReadTimeout = 30000;
@@ -69,6 +71,40 @@ public class HttpClient {
             }
 
             contentType = conn.getContentType();
+            String encoding = "utf-8";
+            if (contentType != null && contentType.indexOf("charset=") > 0) {
+                encoding = contentType.split("charset=")[1];
+            }
+
+            InputStream is = conn.getInputStream();
+            byte[] resp = IOUtils.toByteArray(is);
+            conn.disconnect();
+            return new String(resp, encoding);
+        } catch (MalformedURLException | URISyntaxException e) {
+            logger.error("", e);
+            return "";
+        }
+    }
+
+    public static String postJSON(String url, Object request, Map<String, String> headers) throws IOException {
+        try {
+            HttpURLConnection conn = openConnection(url);
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/json");
+            if (headers != null) {
+                for (String key : headers.keySet()) {
+                    conn.setRequestProperty(key, headers.get("key"));
+                }
+            }
+            conn.getOutputStream().write(objectMapper.writeValueAsBytes(request));
+
+            if (conn.getResponseCode() != 200) {
+                logger.error("response error {},request {}", IOUtils.toString(conn.getErrorStream()), objectMapper.writeValueAsString(request));
+                return "";
+            }
+
+            String contentType = conn.getContentType();
             String encoding = "utf-8";
             if (contentType != null && contentType.indexOf("charset=") > 0) {
                 encoding = contentType.split("charset=")[1];
