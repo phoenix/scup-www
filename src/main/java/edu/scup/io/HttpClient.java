@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class HttpClient {
     private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
-    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.13 Safari/537.36";
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
     public static boolean useProxy;
@@ -66,7 +66,7 @@ public class HttpClient {
             conn.getOutputStream().write(body);
 
             if (conn.getResponseCode() != 200) {
-                logger.error("response error {},request {}", IOUtils.toString(conn.getErrorStream()), new String(body));
+                logger.error("response error {},request url {},body {}", IOUtils.toString(conn.getErrorStream()), url, new String(body));
                 return "";
             }
 
@@ -100,7 +100,8 @@ public class HttpClient {
             conn.getOutputStream().write(objectMapper.writeValueAsBytes(request));
 
             if (conn.getResponseCode() != 200) {
-                logger.error("response error {},request {}", IOUtils.toString(conn.getErrorStream()), objectMapper.writeValueAsString(request));
+                logger.error("response error {},request url {},body {}", IOUtils.toString(conn.getErrorStream()), url
+                        , objectMapper.writeValueAsString(request));
                 return "";
             }
 
