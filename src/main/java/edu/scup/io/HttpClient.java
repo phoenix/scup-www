@@ -150,6 +150,13 @@ public class HttpClient {
     }
 
     public static HttpURLConnection openConnection(String url) throws URISyntaxException, IOException {
+        if (logger.isDebugEnabled()) {
+            if (useProxy) {
+                logger.debug("open url {} with proxy {}", url, proxy);
+            } else {
+                logger.debug("open url {}", url);
+            }
+        }
         URLConnection conn = useProxy ? new URI(url).toURL().openConnection(proxy) : new URI(url).toURL().openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setReadTimeout(socketReadTimeout);
