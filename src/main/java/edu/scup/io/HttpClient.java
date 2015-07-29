@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class HttpClient {
     private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
-    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36";
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.107 Safari/537.36";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
     public static boolean useProxy;
@@ -52,10 +52,10 @@ public class HttpClient {
         if (body.endsWith("&")) {
             body = body.substring(0, body.length() - 1);
         }
-        return post(url, body.getBytes(), null);
+        return post(url, body.getBytes(), null, null);
     }
 
-    public static String post(String url, byte[] body, String contentType) throws IOException {
+    public static String post(String url, byte[] body, String contentType, Map<String, String> headers) throws IOException {
         try {
             HttpURLConnection conn = openConnection(url);
             conn.setRequestMethod("POST");
@@ -63,10 +63,16 @@ public class HttpClient {
             if (contentType != null) {
                 conn.setRequestProperty("Content-Type", contentType);
             }
+            if (headers != null) {
+                for (String key : headers.keySet()) {
+                    conn.setRequestProperty(key, headers.get(key));
+                }
+            }
             conn.getOutputStream().write(body);
 
             if (conn.getResponseCode() != 200) {
-                logger.error("response error {},request url {},body {}", IOUtils.toString(conn.getErrorStream()), url, new String(body));
+                logger.error("response error {},detail: {},request url {},post body {}", conn.getResponseCode()
+                        , conn.getErrorStream() == null ? "" : IOUtils.toString(conn.getErrorStream()), url, new String(body));
                 return "";
             }
 
@@ -87,38 +93,7 @@ public class HttpClient {
     }
 
     public static String postJSON(String url, Object request, Map<String, String> headers) throws IOException {
-        try {
-            HttpURLConnection conn = openConnection(url);
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type", "application/json");
-            if (headers != null) {
-                for (String key : headers.keySet()) {
-                    conn.setRequestProperty(key, headers.get("key"));
-                }
-            }
-            conn.getOutputStream().write(objectMapper.writeValueAsBytes(request));
-
-            if (conn.getResponseCode() != 200) {
-                logger.error("response error {},request url {},body {}", IOUtils.toString(conn.getErrorStream()), url
-                        , objectMapper.writeValueAsString(request));
-                return "";
-            }
-
-            String contentType = conn.getContentType();
-            String encoding = "utf-8";
-            if (contentType != null && contentType.indexOf("charset=") > 0) {
-                encoding = contentType.split("charset=")[1];
-            }
-
-            InputStream is = conn.getInputStream();
-            byte[] resp = IOUtils.toByteArray(is);
-            conn.disconnect();
-            return new String(resp, encoding);
-        } catch (MalformedURLException | URISyntaxException e) {
-            logger.error("", e);
-            return "";
-        }
+        return post(url, objectMapper.writeValueAsBytes(request), "application/json", headers);
     }
 
     public static String getRedirectUrl(String url) throws URISyntaxException, IOException {
