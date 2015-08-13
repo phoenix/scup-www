@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springside.modules.web.Servlets;
 
 import javax.servlet.ServletRequest;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map.Entry;
  * Operator增加IN,NOTNULL
  * 增加方法parseFromServletRequest,parseFromMap
  */
-public class SearchFilter {
+public class SearchFilter implements Serializable{
 
     public enum Operator {
         EQ, NE, LIKE, GT, LT, GTE, LTE, IN, ISNULL, NOTNULL, INARRAY

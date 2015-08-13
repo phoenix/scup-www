@@ -44,8 +44,8 @@ allprojects {
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.debug = "on"
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }
 
 tasks.withType(Javadoc) {
@@ -108,7 +108,7 @@ artifactory {
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
+    publications('mavenJava')
     pkg {
         repo = "maven"
         name = "java-utils"	//发布到JCenter上的项目名字
