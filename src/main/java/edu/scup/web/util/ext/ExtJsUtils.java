@@ -52,16 +52,12 @@ public abstract class ExtJsUtils {
             logger.error("", e);
         }
         for (Map map : list) {
-            if ("list".equals(map.get("type"))) {
-                List value = (List) map.get("value");
-                String field = map.get("field").toString();
-                SearchFilter filter = new SearchFilter(field, SearchFilter.Operator.IN, value);
+            try {
+                SearchFilter.Operator operator = SearchFilter.Operator.valueOf(map.get("operator").toString().toUpperCase());
+                SearchFilter filter = new SearchFilter(map.get("property").toString(), operator, map.get("value"));
                 filters.add(filter);
-            } else if ("string".equals(map.get("type"))) {
-                String value = (String) map.get("value");
-                String field = map.get("field").toString();
-                SearchFilter filter = new SearchFilter(field, SearchFilter.Operator.LIKE, value);
-                filters.add(filter);
+            } catch (IllegalArgumentException e) {
+                logger.error("", e);
             }
         }
         return filters;
