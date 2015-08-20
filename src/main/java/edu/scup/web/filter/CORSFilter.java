@@ -15,11 +15,11 @@ public class CORSFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String origin = request.getHeader("Origin");
         response.addHeader("Access-Control-Allow-Origin", origin);//允许传递cookie时，origin不能为通配符
+        response.setHeader("Access-Control-Allow-Credentials", "true");//允许传cookie
 
-        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
+        if (request.getHeader("Access-Control-Request-Method") != null) {
             // CORS "pre-flight" request
             response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-            response.setHeader("Access-Control-Allow-Credentials", "true");//允许传cookie
             response.addHeader("Access-Control-Allow-Headers", "Content-Type");
             response.addHeader("Access-Control-Max-Age", "3600");
         }
