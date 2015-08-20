@@ -13,7 +13,8 @@ public class CORSFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        response.addHeader("Access-Control-Allow-Origin", "*");
+        String origin = request.getHeader("Origin");
+        response.addHeader("Access-Control-Allow-Origin", origin);//允许传递cookie时，origin不能为通配符
 
         if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
             // CORS "pre-flight" request
