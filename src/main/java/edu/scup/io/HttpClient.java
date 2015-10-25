@@ -60,6 +60,7 @@ public class HttpClient {
             HttpURLConnection conn = openConnection(url);
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
+            conn.setRequestProperty("Accept","*/*");
             if (contentType != null) {
                 conn.setRequestProperty("Content-Type", contentType);
             }
