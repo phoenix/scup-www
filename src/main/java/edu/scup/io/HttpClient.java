@@ -52,7 +52,7 @@ public class HttpClient {
         if (body.endsWith("&")) {
             body = body.substring(0, body.length() - 1);
         }
-        return post(url, body.getBytes(), null, null);
+        return post(url, body.getBytes(), "application/x-www-form-urlencoded; charset=UTF-8", null);
     }
 
     public static String post(String url, byte[] body, String contentType, Map<String, String> headers) throws IOException {
