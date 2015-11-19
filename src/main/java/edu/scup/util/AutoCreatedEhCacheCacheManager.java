@@ -2,6 +2,7 @@ package edu.scup.util;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.ObjectExistsException;
 import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -19,7 +20,10 @@ public class AutoCreatedEhCacheCacheManager extends EhCacheCacheManager {
             // (in case the cache was added at runtime)
             CacheManager cacheManager = getCacheManager();
             if (!cacheManager.cacheExists(name)) {
-                cacheManager.addCache(name);
+                try {
+                    cacheManager.addCache(name);
+                } catch (ObjectExistsException ignored) {
+                }
             }
             Ehcache ehcache = cacheManager.getCache(name);
             if (ehcache != null) {
