@@ -20,6 +20,7 @@ public class HttpClient {
     public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
     public static boolean useProxy;
     private static final int socketReadTimeout = 30000;
+    private static final int connectTimeout = 5000;
 
     public static String getResponse(String url) throws IOException {
         try {
@@ -60,7 +61,7 @@ public class HttpClient {
             HttpURLConnection conn = openConnection(url);
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Accept","*/*");
+            conn.setRequestProperty("Accept", "*/*");
             if (contentType != null) {
                 conn.setRequestProperty("Content-Type", contentType);
             }
@@ -135,6 +136,7 @@ public class HttpClient {
         }
         URLConnection conn = useProxy ? new URI(url).toURL().openConnection(proxy) : new URI(url).toURL().openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
+        conn.setConnectTimeout(connectTimeout);
         conn.setReadTimeout(socketReadTimeout);
         return (HttpURLConnection) conn;
     }
