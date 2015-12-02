@@ -1,6 +1,7 @@
 package edu.scup.data.jpa.repository.support;
 
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 
 import javax.persistence.EntityManager;
@@ -22,8 +23,8 @@ public class JpaRepositoryFactoryExt extends JpaRepositoryFactory {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object getTargetRepository(RepositoryMetadata metadata) {
-        return new SimpleJpaRepositoryExt(getEntityInformation(metadata.getDomainType()),entityManager);
+    public Object getTargetRepository(RepositoryInformation information) {
+        return new SimpleJpaRepositoryExt(getEntityInformation(information.getDomainType()),entityManager);
     }
 
     @Override

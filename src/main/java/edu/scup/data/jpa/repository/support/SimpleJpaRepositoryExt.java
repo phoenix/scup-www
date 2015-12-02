@@ -19,9 +19,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
-import org.springframework.data.jpa.repository.support.PersistenceProvider;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -53,7 +53,7 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
     }
 
     public SimpleJpaRepositoryExt(Class<T> domainClass, EntityManager em) {
-        this(JpaEntityInformationSupport.getMetadata(domainClass, em), em);
+        this(JpaEntityInformationSupport.getEntityInformation(domainClass, em), em);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
         if (entity instanceof Auditable) {
             Auditable auditEntity = (Auditable) entity;
             if (auditEntity.isNew()) {
-                if(auditEntity.getCreatedBy() == null){
+                if (auditEntity.getCreatedBy() == null) {
                     auditEntity.setCreatedBy(ContextHolderUtils.getCurrentUser());
                 }
                 auditEntity.setCreatedDate(new Date());
@@ -240,7 +240,7 @@ public class SimpleJpaRepositoryExt<T, ID extends Serializable>
     }
 
     @Override
-    public List<T> findLimit(final Collection<SearchFilter> filters, final Pageable pageRequest){
+    public List<T> findLimit(final Collection<SearchFilter> filters, final Pageable pageRequest) {
         Specification<T> specifications = DynamicSpecifications.bySearchFilter(filters, entityClazz);
         return getQuery(specifications, pageRequest).setFirstResult(pageRequest.getOffset()).setMaxResults(pageRequest.getPageSize()).getResultList();
     }
