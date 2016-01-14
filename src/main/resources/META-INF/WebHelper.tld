@@ -34,7 +34,7 @@
         <body-content>empty</body-content>
         <attribute>
             <name>files</name>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
@@ -45,7 +45,7 @@
         <body-content>empty</body-content>
         <attribute>
             <name>files</name>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
