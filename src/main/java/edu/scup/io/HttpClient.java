@@ -18,13 +18,16 @@ public class HttpClient {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.107 Safari/537.36";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
-    public static boolean useProxy;
-    private static final int socketReadTimeout = 30000;
-    private static final int connectTimeout = 5000;
+    public static final int socketReadTimeout = 30000;
+    public static final int connectTimeout = 5000;
 
     public static String getResponse(String url) throws IOException {
+        return getResponse(url, null);
+    }
+
+    public static String getResponse(String url, Proxy proxy) throws IOException {
         try {
-            HttpURLConnection conn = openConnection(url);
+            HttpURLConnection conn = openConnection(url, proxy);
             String contentType = conn.getContentType();
             String encoding = "utf-8";
             if (contentType != null && contentType.indexOf("charset=") > 0) {
@@ -127,14 +130,18 @@ public class HttpClient {
     }
 
     public static HttpURLConnection openConnection(String url) throws URISyntaxException, IOException {
+        return openConnection(url, null);
+    }
+
+    public static HttpURLConnection openConnection(String url, Proxy proxy) throws URISyntaxException, IOException {
         if (logger.isDebugEnabled()) {
-            if (useProxy) {
+            if (proxy != null) {
                 logger.debug("open url {} with proxy {}", url, proxy);
             } else {
                 logger.debug("open url {}", url);
             }
         }
-        URLConnection conn = useProxy ? new URI(url).toURL().openConnection(proxy) : new URI(url).toURL().openConnection();
+        URLConnection conn = proxy != null ? new URI(url).toURL().openConnection(proxy) : new URI(url).toURL().openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setConnectTimeout(connectTimeout);
         conn.setReadTimeout(socketReadTimeout);
