@@ -144,7 +144,7 @@ dependencies {
     /* Excel & PDF */
     compile "org.apache.poi:poi:3.9", optional
     compile "org.apache.poi:poi-ooxml:3.9", optional
-    compile "com.itextpdf:itextpdf:5.5.0", optional
+    compile "com.itextpdf:itextpdf:5.5.7", optional
     compile "com.itextpdf:itext-asian:5.2.0", optional
     compile "org.xhtmlrenderer:flying-saucer-pdf-itext5:9.0.6", optional
 
