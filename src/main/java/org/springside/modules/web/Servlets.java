@@ -194,7 +194,7 @@ public class Servlets {
     /**
      * 根据cookie名获取对应cookie.
      */
-    public Optional<Cookie> getCookie(HttpServletRequest request, String cookieName) {
+    public static Optional<Cookie> getCookie(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return Optional.empty();
