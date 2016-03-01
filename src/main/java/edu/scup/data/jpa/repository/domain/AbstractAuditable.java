@@ -1,5 +1,7 @@
 package edu.scup.data.jpa.repository.domain;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.ManyToOne;
@@ -22,9 +24,11 @@ public abstract class AbstractAuditable<U, PK extends Serializable> extends Abst
     private static final long serialVersionUID = -2363991186256484787L;
 
     @ManyToOne
+    @NotFound(action= NotFoundAction.IGNORE)
     private U createdBy;
 
     @ManyToOne
+    @NotFound(action= NotFoundAction.IGNORE)
     private U lastModifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
