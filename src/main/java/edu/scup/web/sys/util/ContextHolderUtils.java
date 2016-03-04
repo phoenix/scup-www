@@ -31,7 +31,11 @@ public abstract class ContextHolderUtils {
     }
 
     public static SysUser getCurrentUser() {
-        Subject currentUser = SecurityUtils.getSubject();
-        return (SysUser) currentUser.getPrincipal();
+        try {
+            Subject currentUser = SecurityUtils.getSubject();
+            return (SysUser) currentUser.getPrincipal();
+        } catch (IllegalStateException e) {
+            return null;
+        }
     }
 }
