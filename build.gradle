@@ -7,7 +7,7 @@
 apply plugin: 'maven-publish'
 apply plugin: "com.jfrog.bintray"
 apply plugin: "com.jfrog.artifactory"
-apply plugin: 'optional-base'
+apply plugin: 'nebula.optional-base'
 buildscript {
     repositories {
         jcenter()
@@ -15,7 +15,7 @@ buildscript {
     dependencies {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2"
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
-        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.+'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
     }
 }
 

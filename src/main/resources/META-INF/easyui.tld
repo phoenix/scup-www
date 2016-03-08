@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-    "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 <taglib>
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
@@ -298,7 +298,7 @@
 
     <tag>
         <name>dgToolBar</name>
-        <tag-class>edu.scup.web.servlet.tags.easyui.DataGridToolBarTag</tag-class>
+        <tag-class>edu.scup.web.servlet.tags.easyui.DataGridToolBarBodyTag</tag-class>
         <body-content>JSP</body-content>
         <description>列表工具条标签</description>
         <attribute>
@@ -349,7 +349,7 @@
 
     <tag>
         <name>edatagrid</name>
-        <tag-class>edu.scup.web.servlet.tags.easyui.EDataGridTag</tag-class>
+        <tag-class>edu.scup.web.servlet.tags.easyui.EDataGridBodyTag</tag-class>
         <description>数据列表</description>
         <attribute>
             <name>id</name>
@@ -423,7 +423,7 @@
 
     <tag>
         <name>edgCol</name>
-        <tag-class>edu.scup.web.servlet.tags.easyui.EDataGridColumnTag</tag-class>
+        <tag-class>edu.scup.web.servlet.tags.easyui.EDataGridColumnBodyTag</tag-class>
         <description>列表字段</description>
         <attribute>
             <name>columnTitle</name>
@@ -513,6 +513,61 @@
         </attribute>
     </tag>
 
+    <tag>
+        <name>comboBoxEditor</name>
+        <tag-class>cn.wujc.web.servlet.tags.easyui.grid.editor.ComboBoxEditorTag</tag-class>
+        <description>下拉框编辑器</description>
+    </tag>
+
+    <tag>
+        <name>comboBox</name>
+        <tag-class>cn.wujc.web.servlet.tags.easyui.form.ComboBoxTag</tag-class>
+        <description>下拉框</description>
+        <attribute>
+            <name>valueField</name>
+            <description>The underlying data value name to bind to this ComboBox. Default "value"</description>
+        </attribute>
+        <attribute>
+            <name>textField</name>
+            <description>The underlying data field name to bind to this ComboBox. Default "text"</description>
+        </attribute>
+        <attribute>
+            <name>groupField</name>
+            <description>Indicate what field to be grouped.</description>
+        </attribute>
+        <attribute>
+            <name>groupFormatter</name>
+            <description>return group text to display on group item.</description>
+        </attribute>
+        <attribute>
+            <name>url</name>
+            <description>A URL to load list data from remote.</description>
+        </attribute>
+        <attribute>
+            <name>data</name>
+            <description>The list data to be loaded.example:
+                data: [{label: 'java',value: 'Java'},{label: 'perl',value: 'Perl'},{label: 'ruby',value: 'Ruby'}]
+            </description>
+        </attribute>
+        <attribute>
+            <name>queryParams</name>
+            <description>The additional parameters that will be sent to server when requesting remote data.Default {}</description>
+        </attribute>
+        <attribute>
+            <name>formatter</name>
+            <description>Defineds how to render the row. The function takes one parameter: row.</description>
+        </attribute>
+        <attribute>
+            <name>loader</name>
+            <description>
+                Defines how to load data from remote server. Return false can abort this action.
+                function(param,success,error)
+                param: the parameter object to pass to remote server.
+                success(data): the callback function that will be called when retrieve data successfully.
+                error(): the callback function that will be called when failed to retrieve data.
+            </description>
+        </attribute>
+    </tag>
 
     <tag>
         <name>dictSelect</name>
