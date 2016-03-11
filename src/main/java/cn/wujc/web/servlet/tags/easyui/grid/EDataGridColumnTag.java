@@ -1,4 +1,4 @@
-package edu.scup.web.servlet.tags.easyui;
+package cn.wujc.web.servlet.tags.easyui.grid;
 
 import cn.wujc.web.servlet.tags.easyui.BaseHtmlElementBodyTag;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EDataGridColumnBodyTag extends BaseHtmlElementBodyTag implements Cloneable {
+public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Cloneable {
     private static final long serialVersionUID = 1403854988552009583L;
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -54,7 +54,7 @@ public class EDataGridColumnBodyTag extends BaseHtmlElementBodyTag implements Cl
             acbf.autowireBean(this);
         }
 
-        EDataGridColumnBodyTag columnTag = this.clone();
+        EDataGridColumnTag columnTag = this.clone();
 
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
@@ -133,7 +133,7 @@ public class EDataGridColumnBodyTag extends BaseHtmlElementBodyTag implements Cl
             }
         }
         getEDataGridTag().addColumn(columnTag);
-        return EVAL_PAGE;
+        return EVAL_BODY_INCLUDE;
     }
 
     private void setFormatter(StringBuilder formatter, Map<String, Object> map) {
@@ -265,9 +265,9 @@ public class EDataGridColumnBodyTag extends BaseHtmlElementBodyTag implements Cl
     }
 
     @Override
-    public EDataGridColumnBodyTag clone() {
+    public EDataGridColumnTag clone() {
         try {
-            return (EDataGridColumnBodyTag) super.clone();
+            return (EDataGridColumnTag) super.clone();
         } catch (CloneNotSupportedException ignored) {
             return null;
         }

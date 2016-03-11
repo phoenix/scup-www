@@ -298,7 +298,7 @@
 
     <tag>
         <name>dgToolBar</name>
-        <tag-class>edu.scup.web.servlet.tags.easyui.DataGridToolBarBodyTag</tag-class>
+        <tag-class>cn.wujc.web.servlet.tags.easyui.grid.DataGridToolBarTag</tag-class>
         <body-content>JSP</body-content>
         <description>列表工具条标签</description>
         <attribute>
@@ -349,7 +349,7 @@
 
     <tag>
         <name>edatagrid</name>
-        <tag-class>edu.scup.web.servlet.tags.easyui.EDataGridBodyTag</tag-class>
+        <tag-class>cn.wujc.web.servlet.tags.easyui.grid.EDataGridTag</tag-class>
         <description>数据列表</description>
         <attribute>
             <name>id</name>
@@ -423,7 +423,7 @@
 
     <tag>
         <name>edgCol</name>
-        <tag-class>edu.scup.web.servlet.tags.easyui.EDataGridColumnBodyTag</tag-class>
+        <tag-class>cn.wujc.web.servlet.tags.easyui.grid.EDataGridColumnTag</tag-class>
         <description>列表字段</description>
         <attribute>
             <name>columnTitle</name>

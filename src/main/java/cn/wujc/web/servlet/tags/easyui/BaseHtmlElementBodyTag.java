@@ -1,6 +1,6 @@
 package cn.wujc.web.servlet.tags.easyui;
 
-import edu.scup.web.servlet.tags.easyui.EDataGridBodyTag;
+import cn.wujc.web.servlet.tags.easyui.grid.EDataGridTag;
 import org.springframework.web.servlet.tags.RequestContextAwareTag;
 import org.springframework.web.servlet.tags.form.TagWriter;
 
@@ -45,7 +45,8 @@ public abstract class BaseHtmlElementBodyTag extends RequestContextAwareTag impl
     }
 
     protected TagWriter createTagWriter() {
-        return new TagWriter(this.pageContext);
+        //bodyTag中的pageContext.getOut()在setBodyContent()后会被换掉
+        return new TagWriter(this.pageContext.getOut());
     }
 
     @SuppressWarnings("unchecked")
@@ -60,12 +61,12 @@ public abstract class BaseHtmlElementBodyTag extends RequestContextAwareTag impl
         return sb;
     }
 
-    protected EDataGridBodyTag getEDataGridTag() {
+    protected EDataGridTag getEDataGridTag() {
         Tag tag = this;
-        while (!EDataGridBodyTag.class.equals(tag.getClass())) {
+        while (!EDataGridTag.class.equals(tag.getClass())) {
             tag = getParent();
         }
-        return (EDataGridBodyTag) tag;
+        return (EDataGridTag) tag;
     }
 
     /**

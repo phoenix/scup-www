@@ -160,7 +160,7 @@ public class ComboBoxTag extends TagSupport {
     @Override
     public int doEndTag() throws JspException {
         try {
-            pageContext.pushBody().write(MAPPER.writeValueAsString(this));
+            pageContext.getOut().write(MAPPER.writeValueAsString(this));
         } catch (IOException e) {
             LOG.error("", e);
         }

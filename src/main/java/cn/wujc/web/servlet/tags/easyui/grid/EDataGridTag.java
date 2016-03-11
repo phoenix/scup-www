@@ -1,4 +1,4 @@
-package edu.scup.web.servlet.tags.easyui;
+package cn.wujc.web.servlet.tags.easyui.grid;
 
 import cn.wujc.web.servlet.tags.easyui.BaseHtmlElementBodyTag;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
+public class EDataGridTag extends BaseHtmlElementBodyTag {
     private static final long serialVersionUID = 3888335455632937097L;
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -42,8 +42,8 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
     private String idField = "id";
     private String sortName;
     private String sortOrder;
-    private List<EDataGridColumnBodyTag> columns = new ArrayList<>();
-    private List<DataGridToolBarBodyTag> toolbars = new ArrayList<>();
+    private List<EDataGridColumnTag> columns = new ArrayList<>();
+    private List<DataGridToolBarTag> toolbars = new ArrayList<>();
     private static final Map<String, String> selfFuncMap = new HashMap<>();
     private static final Map<String, String> selfFuncCssMap = new HashMap<>();
 
@@ -98,7 +98,7 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
         tagWriter.startTag("thead");
         tagWriter.startTag("tr");
         tagWriter.forceBlock();
-        return EVAL_PAGE;
+        return EVAL_BODY_INCLUDE;
     }
 
     @Override
@@ -115,12 +115,12 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
         tagWriter.startTag("div");
         tagWriter.writeAttribute("id", getToolbar().replace("#", ""));
         tagWriter.forceBlock();
-        List<EDataGridColumnBodyTag> queryColumns = findQueryableColumns();
+        List<EDataGridColumnTag> queryColumns = findQueryableColumns();
         if (!queryColumns.isEmpty()) {
             tagWriter.startTag("div");
             tagWriter.writeAttribute("id", "searchColumns");
         }
-        for (EDataGridColumnBodyTag column : queryColumns) {
+        for (EDataGridColumnTag column : queryColumns) {
             tagWriter.startTag("div");
             tagWriter.writeAttribute("style", "display: inline-block;padding: 10px;");
             tagWriter.forceBlock();
@@ -198,7 +198,7 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
         }
         tagWriter.startTag("div");
         StringBuilder links = new StringBuilder();
-        for (DataGridToolBarBodyTag toolBarTag : toolbars) {
+        for (DataGridToolBarTag toolBarTag : toolbars) {
             String funcName = toolBarTag.getFuncName();
             boolean selfOperate = selfFuncMap.containsKey(funcName);
             links.append("<a ");
@@ -245,7 +245,7 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
                 .append("',\r\n\tupdateUrl: '").append(updateUrl).append("',\r\n\tdestroyUrl:'").append(destroyUrl).append("',\n")
                 .append("\tcolumns: [[\n");
         List<String> columnsString = new ArrayList<>();
-        for (EDataGridColumnBodyTag column : this.columns) {
+        for (EDataGridColumnTag column : this.columns) {
             Map<String, Object> json = new HashMap<>();
             json.put("field", column.getField());
             json.put("title", column.getColumnTitle());
@@ -283,9 +283,9 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
         tagWriter.endTag();
     }
 
-    private List<EDataGridColumnBodyTag> findQueryableColumns() {
-        List<EDataGridColumnBodyTag> rt = new ArrayList<>();
-        for (EDataGridColumnBodyTag column : columns) {
+    private List<EDataGridColumnTag> findQueryableColumns() {
+        List<EDataGridColumnTag> rt = new ArrayList<>();
+        for (EDataGridColumnTag column : columns) {
             if (column.isQuery()) {
                 rt.add(column);
             }
@@ -345,11 +345,11 @@ public class EDataGridBodyTag extends BaseHtmlElementBodyTag {
         this.sortOrder = sortOrder;
     }
 
-    public void addColumn(EDataGridColumnBodyTag column) {
+    public void addColumn(EDataGridColumnTag column) {
         this.columns.add(column);
     }
 
-    public void addToolbar(DataGridToolBarBodyTag dataGridToolBarTag) {
+    public void addToolbar(DataGridToolBarTag dataGridToolBarTag) {
         this.toolbars.add(dataGridToolBarTag);
     }
 }

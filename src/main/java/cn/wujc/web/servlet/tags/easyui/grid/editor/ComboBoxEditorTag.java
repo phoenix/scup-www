@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
 
@@ -19,6 +20,11 @@ public class ComboBoxEditorTag extends BodyTagSupport {
 
     public void setComboBox(ComboBoxTag comboBox) {
         this.comboBox = comboBox;
+    }
+
+    @Override
+    public int doAfterBody() throws JspException {
+        return SKIP_BODY;
     }
 
     @Override
