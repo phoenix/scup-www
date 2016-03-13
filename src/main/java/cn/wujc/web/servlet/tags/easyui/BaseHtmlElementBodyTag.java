@@ -17,7 +17,7 @@ public abstract class BaseHtmlElementBodyTag extends RequestContextAwareTag impl
     public static final String DATA_DEFINE_PREFIX = "data_define_";
     public static final String VALUE_MAP_KEY = "GRID_MAP";
 
-    private BodyContent bodyContent;
+    protected BodyContent bodyContent;
 
     protected String cssClass;
     protected String cssStyle;

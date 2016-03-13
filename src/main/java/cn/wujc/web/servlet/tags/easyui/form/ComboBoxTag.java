@@ -1,8 +1,11 @@
 package cn.wujc.web.servlet.tags.easyui.form;
 
-import cn.wujc.web.servlet.tags.easyui.grid.editor.ComboBoxEditorTag;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
@@ -16,7 +19,10 @@ import java.io.IOException;
 public class ComboBoxTag extends TagSupport {
     private static final Logger LOG = LoggerFactory.getLogger(ComboBoxTag.class);
     private static final ObjectMapper MAPPER = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+            .configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false)
+            .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+            .configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
     //The underlying data value name to bind to this ComboBox. Default "value"
     private String valueField;
@@ -36,7 +42,9 @@ public class ComboBoxTag extends TagSupport {
     private String method;
     //The list data to be loaded.example:
     //data: [{label: 'java',value: 'Java'},{label: 'perl',value: 'Perl'},{label: 'ruby',value: 'Ruby'}]
-    private String data;
+    @JsonIgnore
+    private String jsonData;
+    private JsonNode data;
     //The additional parameters that will be sent to server when requesting remote data.Default {}
     private String queryParams;
     //Defines how to filter the local data when 'mode' is set to 'local'. The function takes two parameters:
@@ -109,11 +117,20 @@ public class ComboBoxTag extends TagSupport {
         this.method = method;
     }
 
-    public String getData() {
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) throws IOException {
+        this.jsonData = jsonData;
+        this.data = MAPPER.readTree(jsonData);
+    }
+
+    public JsonNode getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(JsonNode data) {
         this.data = data;
     }
 
@@ -163,10 +180,6 @@ public class ComboBoxTag extends TagSupport {
             pageContext.getOut().write(MAPPER.writeValueAsString(this));
         } catch (IOException e) {
             LOG.error("", e);
-        }
-        ComboBoxEditorTag tag = (ComboBoxEditorTag) findAncestorWithClass(this, ComboBoxEditorTag.class);
-        if (tag != null) {
-            tag.setComboBox(this);
         }
         return EVAL_PAGE;
     }

@@ -544,7 +544,7 @@
             <description>A URL to load list data from remote.</description>
         </attribute>
         <attribute>
-            <name>data</name>
+            <name>jsonData</name>
             <description>The list data to be loaded.example:
                 data: [{label: 'java',value: 'Java'},{label: 'perl',value: 'Perl'},{label: 'ruby',value: 'Ruby'}]
             </description>

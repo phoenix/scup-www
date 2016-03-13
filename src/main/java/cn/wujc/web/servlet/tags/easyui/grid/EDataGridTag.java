@@ -346,7 +346,7 @@ public class EDataGridTag extends BaseHtmlElementBodyTag {
     }
 
     public void addColumn(EDataGridColumnTag column) {
-        this.columns.add(column);
+        this.columns.add(column.clone());//JspTag会被复用,Field变量会被修改
     }
 
     public void addToolbar(DataGridToolBarTag dataGridToolBarTag) {

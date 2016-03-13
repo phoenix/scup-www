@@ -8,12 +8,16 @@ import edu.scup.web.sys.entity.SDict;
 import edu.scup.web.sys.entity.SDictGroup;
 import edu.scup.web.sys.service.SystemService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.tags.form.TagWriter;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +25,9 @@ import java.util.Map;
 
 public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Cloneable {
     private static final long serialVersionUID = 1403854988552009583L;
+    private static final Logger LOG = LoggerFactory.getLogger(EDataGridColumnTag.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private TagWriter tagWriter;
     @Autowired
     private SystemService systemService;
     @Autowired
@@ -47,25 +51,22 @@ public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Clonea
 
     @Override
     protected int writeTagContent(TagWriter tagWriter) throws JspException {
-        this.tagWriter = tagWriter;
         if (systemService == null) {
             WebApplicationContext wac = getRequestContext().getWebApplicationContext();
             AutowireCapableBeanFactory acbf = wac.getAutowireCapableBeanFactory();
             acbf.autowireBean(this);
         }
 
-        EDataGridColumnTag columnTag = this.clone();
-
         boolean dicCombobox = StringUtils.equals("combobox", editor) && StringUtils.isNotBlank(dictionary);
         if (dicCombobox) {
-            columnTag.setEditor("{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
+            setEditor("{type: 'combobox', options: { data: " + DATA_DEFINE_PREFIX + dictionary
                     + ",valueField: 'value',textField: 'display',required:" + required + "}}");
         } else if (StringUtils.equals("validatebox", editor) && StringUtils.isNotBlank(validType)) {
-            columnTag.setEditor("{type: 'validatebox', options: {validType:'" + validType + "'}}");
+            setEditor("{type: 'validatebox', options: {validType:'" + validType + "'}}");
         }
 
         if (StringUtils.isNotBlank(dictionary) && StringUtils.isBlank(formatter)) {
-            columnTag.setFormatter("format_" + dictionary);
+            setFormatter("format_" + dictionary);
         } else if (isImage) {
             String style = "";
             if (StringUtils.isNotBlank(imageSize)) {
@@ -75,7 +76,7 @@ public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Clonea
                     style += "height=" + size[1] + " ";
                 }
             }
-            columnTag.setFormatter("function(value,rec,index){return '<image border=0 " + style + " src='+value+'/>';}");
+            setFormatter("function(value,rec,index){return '<image border=0 " + style + " src='+value+'/>';}");
         }
         if (StringUtils.isNotBlank(dictionary)) {
             StringBuilder js = getSnippets(KEY_JS);
@@ -86,7 +87,7 @@ public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Clonea
             boolean addFormatter = formatter.length() < 10;
             boolean defineData = dataDefine.length() < 10;
             if (!addFormatter && !defineData) {
-                getEDataGridTag().addColumn(columnTag);
+                getEDataGridTag().addColumn(this);
                 return EVAL_PAGE;
             }
             if (addFormatter) {
@@ -132,8 +133,24 @@ public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Clonea
                 }
             }
         }
-        getEDataGridTag().addColumn(columnTag);
-        return EVAL_BODY_INCLUDE;
+
+        return EVAL_BODY_BUFFERED;
+    }
+
+    @Override
+    public int doAfterBody() throws JspException {
+        JspWriter out = bodyContent.getEnclosingWriter();
+        try {
+            out.print(bodyContent.getString());
+        } catch (IOException e) {
+            LOG.error("", e);
+        }
+        return SKIP_BODY;
+    }
+
+    public int doEndTag() throws JspException {
+        getEDataGridTag().addColumn(this);
+        return super.doEndTag();
     }
 
     private void setFormatter(StringBuilder formatter, Map<String, Object> map) {
@@ -265,7 +282,7 @@ public class EDataGridColumnTag extends BaseHtmlElementBodyTag implements Clonea
     }
 
     @Override
-    public EDataGridColumnTag clone() {
+    public EDataGridColumnTag clone() {//要保存Field变量给最外部的GridTag使用,更好的方式是再新建一个VO
         try {
             return (EDataGridColumnTag) super.clone();
         } catch (CloneNotSupportedException ignored) {
