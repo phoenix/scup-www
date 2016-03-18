@@ -55,8 +55,19 @@ tasks.withType(Javadoc) {
 
 task cleanAll << {
     println "Clean project.."
-    delete buildDir
+    delete "${buildDir}/classes"
+    delete "${buildDir}/resources"
 }
+
+task init << {
+    println '+---------------------------------------------------+'
+    println '|                                                   |'
+    println "| B U I L D I N G $project.name $version ...         "
+    println '|                                                   |'
+    println '+---------------------------------------------------+'
+}
+
+compileJava.dependsOn([init,cleanAll])
 
 jar {
     manifest {
